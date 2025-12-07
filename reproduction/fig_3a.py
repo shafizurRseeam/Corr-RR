@@ -36,6 +36,7 @@ from utils.corr_rr_fixed_new import (
 )
 
 
+
 mpl.rcParams['pdf.fonttype'] = 42   # TrueType
 mpl.rcParams['ps.fonttype'] = 42    # TrueType for EPS
 
@@ -109,7 +110,6 @@ def run_all_once(
     combined_rsrfd = combine_phase_estimates(est_I_rsrfd, est_II_rsrfd, n1_rsrfd, n2_rsrfd)
     out["RS+RFD"] = np.mean([compute_mse(true_freqs[c], combined_rsrfd[c]) for c in cols])
 
-    # Corr-RR
     if use_corr_rr:
         est_I, df_B, doms_stable = corr_rr_phase1_spl(df, epsilon, frac=frac_phase1_corr)
         n1 = len(df) - len(df_B)
@@ -123,82 +123,88 @@ def run_all_once(
 
     return out
 
-
-def sweep_over_d(
-    ds=(2, 3, 4, 5, 6),
-    epsilon=0.6,
+# ---------------- sweep & plot ----------------
+def sweep_all(
     n=10000,
+    epsilons=(0.2, 0.4, 0.6, 0.8, 1.0),
     R=50,
-    corr=0.9,                
+    corr=0.9,                 # global rho: every Xj (j>=2) correlates to X1
+    d=4,                      # total attributes generated
     domain=None,
-    x1_marginal=None,        
-    q_marginal=None,          
+    x1_marginal=None,         # marginal p for X1 (and X1 only)
+    q_marginal=None,          # None => uniform for non-copy branch
+    plot_dir=None,
+    csv_dir=None,
     seed=None,
     use_corr_rr=True,
     frac_phase1_corr=0.1,
     frac_phase1_rsrfd=0.1,
-    plot_dir=None,
-    csv_dir=None,
     file=None,
 ):
-
+    """
+    Star model data: X1 ~ p; for j=2..d, Xj = X1 w.p. corr else ~ q.
+    """
     if domain is None:
         domain = [0, 1]
 
     if x1_marginal is None:
+        # default balanced marginal on the given domain
         x1_marginal = {v: 1.0 / len(domain) for v in domain}
 
     keys = ["SPL", "RS+FD", "RS+RFD"] + (["Corr-RR"] if use_corr_rr else [])
-    means = {k: np.zeros(len(ds), dtype=float) for k in keys}
+    means = {k: np.zeros(len(epsilons)) for k in keys}
 
     if seed is not None:
         np.random.seed(seed)
 
-    for idx, d in enumerate(ds):
-        for run in range(R):
-            df = gen_star_from_x1(
-                n=n,
-                domain=domain,
-                d=d,
-                x1_marginal=x1_marginal,
-                rho=corr,
-                q_marginal=q_marginal,
-                seed=None if seed is None else (seed + run + int(1000 * corr) + 17 * d),
-            )
+    attr_count = d
+    domain_size = len(domain)
+
+    for run in range(R):
+        # ---- NEW: star generator ----
+        df = gen_star_from_x1(
+            n=n,
+            domain=domain,
+            d=d,
+            x1_marginal=x1_marginal,
+            rho=corr,
+            q_marginal=q_marginal,
+            seed=None if seed is None else (seed + run + int(1000 * corr)),
+        )
+
+        for j, eps in enumerate(epsilons):
             res = run_all_once(
                 df,
-                epsilon,
+                eps,
                 use_corr_rr=use_corr_rr,
                 frac_phase1_corr=frac_phase1_corr,
                 frac_phase1_rsrfd=frac_phase1_rsrfd,
             )
             for k in keys:
-                means[k][idx] += res[k]
+                means[k][j] += res[k]
 
-        for k in keys:
-            means[k][idx] /= R
+    for k in keys:
+        means[k] /= R
 
-    # ---- Plot MSE vs d ----
+    # Plot
     plt.figure(figsize=(10, 8))
-    plt.plot(ds, means["SPL"],   '-o', linewidth=3, markersize=16, label='SPL')
-    plt.plot(ds, means["RS+FD"], '-s', linewidth=3, markersize=16, label='RS+FD')
-    plt.plot(ds, means["RS+RFD"],'-^', linewidth=3, markersize=16, label='RS+RFD')
+    plt.plot(epsilons, means["SPL"],         '-o', linewidth=3, markersize=16, label='SPL')
+    plt.plot(epsilons, means["RS+FD"],       '-s', linewidth=3, markersize=16, label='RS+FD')
+    plt.plot(epsilons, means["RS+RFD"],      '-^', linewidth=3, markersize=16, label='RS+RFD')
     if use_corr_rr:
-        plt.plot(ds, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
-
-    plt.xlabel('Number of Attributes', fontsize=40)
-    plt.ylabel('MSE', fontsize=40)
-    plt.xticks(ds, labels=[str(x) for x in ds])
+        plt.plot(epsilons, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
+    #print(means["Corr-RR"])
+    plt.xlabel(r'$ϵ$', fontsize=50)
+    plt.ylabel('MSE',  fontsize=40)
+    plt.xticks(epsilons, labels=[str(e) for e in epsilons])
     plt.tick_params(axis='both', which='major', labelsize=30)
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-    plt.legend(fontsize=35, loc='upper left', frameon=True, edgecolor='black')
+    plt.legend(fontsize=35, loc='upper right', frameon=True, edgecolor='black')
     plt.tight_layout()
 
-    # Filenames
+    # Output filenames
     def _fmt(x): return f"{x:g}"
-    base = f"mseVSd_eps_{_fmt(epsilon)}_n_{n}_rho_{_fmt(corr)}_k_{len(domain)}"
-    base = f"fig_"
-
+    base = f"mseVSepsilon_{attr_count}attr_{domain_size}domain_n_{n}_frac_{_fmt(frac_phase1_rsrfd)}_rho_{_fmt(corr)}"
 
     if plot_dir:
         os.makedirs(plot_dir, exist_ok=True)
@@ -208,35 +214,32 @@ def sweep_over_d(
 
     if csv_dir:
         os.makedirs(csv_dir, exist_ok=True)
-        df_out = pd.DataFrame({"d": list(ds)})
+        df_out = pd.DataFrame({"epsilon": list(epsilons)})
         for k in keys:
             df_out[k] = means[k]
-        df_out.to_csv(os.path.join(csv_dir, file + ".csv"), index=False)
+        df_out.to_csv(os.path.join(csv_dir, base + ".csv"), index=False)
 
     return means
 
 
 
-
+# ---------------- main ----------------
 if __name__ == "__main__":
-    # Choose a fixed epsilon
-    fixed_eps = 0.1
+    eps = [0.1, 0.2, 0.3, 0.4, 0.5]
 
-    # Attribute counts to test
-    ds = [2, 3, 4, 5, 6]
-
-    # Data spec (reuse your earlier choices or tweak)
+    # Data spec
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    rho = 0.9
-    q = None  # uniform for non-copy branch
+    d = 4                # X1..X4 (all X2..X4 correlated to X1 with the same rho)
+    rho = 0.1            # correlation to X1 for every other attribute
+    q = None             # None => uniform base for non-copy draws
 
-    means_d = sweep_over_d(
-        ds=ds,
-        epsilon=fixed_eps,
+    means = sweep_all(
         n=200,
+        epsilons=eps,
         R=1,
         corr=rho,
+        d=d,
         domain=domain,
         x1_marginal=x1_marginal,
         q_marginal=q,
@@ -244,7 +247,6 @@ if __name__ == "__main__":
         use_corr_rr=True,
         frac_phase1_corr=0.2,
         frac_phase1_rsrfd=0.2,
-        #plot_dir="/Users/shafizurrahmanseeam/Desktop/corr-rr/Corr-RR/experiments_notebook",
-        #file="fig_5a",
-     
+        # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
+        # file="fig_3a",
     )

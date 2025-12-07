@@ -1,3 +1,4 @@
+
 import sys, os
 
 
@@ -220,7 +221,7 @@ def sweep_over_d(
 
 if __name__ == "__main__":
     # Choose a fixed epsilon
-    fixed_eps = 0.1
+    fixed_eps = 0.3
 
     # Attribute counts to test
     ds = [2, 3, 4, 5, 6]
@@ -228,7 +229,7 @@ if __name__ == "__main__":
     # Data spec (reuse your earlier choices or tweak)
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    rho = 0.9
+    rho = 0.1
     q = None  # uniform for non-copy branch
 
     means_d = sweep_over_d(

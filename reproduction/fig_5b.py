@@ -220,7 +220,7 @@ def sweep_over_d(
 
 if __name__ == "__main__":
     # Choose a fixed epsilon
-    fixed_eps = 0.1
+    fixed_eps = 0.3
 
     # Attribute counts to test
     ds = [2, 3, 4, 5, 6]

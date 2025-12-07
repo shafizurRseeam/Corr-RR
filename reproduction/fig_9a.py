@@ -75,7 +75,6 @@ def _build_p_y_table_minimal(est_I, epsilon, n2, domain, cols):
         for a in cols for b in cols if a != b
     }
 
-# ---------------- one-shot runner ----------------
 def run_all_once(
     df,
     epsilon,
@@ -124,24 +123,35 @@ def run_all_once(
     return out
 
 
-def sweep_over_d(
-    ds=(2, 3, 4, 5, 6),
-    epsilon=0.6,
+
+
+def sweep_vs_phase1(
     n=10000,
+    epsilon=0.8,                  # hold epsilon fixed while sweeping Phase I fraction
     R=50,
-    corr=0.9,                
+    corr=0.9,                     # rho for star model: Xj copies X1 with prob corr
+    d=4,
     domain=None,
-    x1_marginal=None,        
-    q_marginal=None,          
-    seed=None,
-    use_corr_rr=True,
-    frac_phase1_corr=0.1,
-    frac_phase1_rsrfd=0.1,
+    x1_marginal=None,             # None => uniform on domain
+    q_marginal=None,              # None => uniform for non-copy branch
     plot_dir=None,
     csv_dir=None,
+    seed=None,
+    use_corr_rr=True,
+    fractions=(0.10, 0.20, 0.30, 0.40, 0.50),
     file=None,
 ):
+    """
+    Star model data:
+      - X1 ~ x1_marginal over `domain`
+      - For j >= 2: Xj = X1 w.p. corr; else ~ q_marginal (or uniform if None)
+    X-axis: Phase I user fraction (|A|/n). Y-axis: MSE.
+    Curves: SPL, RS+FD, RS+RFD, Corr-RR.
 
+    Optimization: SPL and RS+FD are single-phase. For a fixed dataset, their
+    MSEs don't depend on the Phase-I fraction. We therefore compute them only
+    for the first x-value per run and reuse that value across the remaining x-values.
+    """
     if domain is None:
         domain = [0, 1]
 
@@ -149,102 +159,127 @@ def sweep_over_d(
         x1_marginal = {v: 1.0 / len(domain) for v in domain}
 
     keys = ["SPL", "RS+FD", "RS+RFD"] + (["Corr-RR"] if use_corr_rr else [])
-    means = {k: np.zeros(len(ds), dtype=float) for k in keys}
+    means = {k: np.zeros(len(fractions)) for k in keys}
 
     if seed is not None:
         np.random.seed(seed)
 
-    for idx, d in enumerate(ds):
-        for run in range(R):
-            df = gen_star_from_x1(
-                n=n,
-                domain=domain,
-                d=d,
-                x1_marginal=x1_marginal,
-                rho=corr,
-                q_marginal=q_marginal,
-                seed=None if seed is None else (seed + run + int(1000 * corr) + 17 * d),
-            )
+    attr_count = d
+    domain_size = len(domain)
+
+    for run in range(R):
+        # One dataset per run; reused across all fractions
+        df = gen_star_from_x1(
+            n=n,
+            domain=domain,
+            d=d,
+            x1_marginal=x1_marginal,
+            rho=corr,
+            q_marginal=q_marginal,
+            seed=None if seed is None else (seed + run + int(1000 * corr)),
+        )
+
+        # Cache single-phase results (computed only once at j==0)
+        cached_single_phase = {}
+
+        for j, frac in enumerate(fractions):
             res = run_all_once(
                 df,
                 epsilon,
                 use_corr_rr=use_corr_rr,
-                frac_phase1_corr=frac_phase1_corr,
-                frac_phase1_rsrfd=frac_phase1_rsrfd,
+                frac_phase1_corr=frac,     # Corr-RR Phase I fraction
+                frac_phase1_rsrfd=frac,    # RS+RFD Phase I fraction
             )
-            for k in keys:
-                means[k][idx] += res[k]
 
-        for k in keys:
-            means[k][idx] /= R
+            # --- RS+RFD and Corr-RR: accumulate at every x-value as usual ---
+            if "RS+RFD" in keys:
+                means["RS+RFD"][j] += res["RS+RFD"]
+            if "Corr-RR" in keys and use_corr_rr:
+                means["Corr-RR"][j] += res["Corr-RR"]
 
-    # ---- Plot MSE vs d ----
+            # --- SPL & RS+FD: compute once (j==0) per run, then reuse ---
+            if "SPL" in keys:
+                if j == 0:
+                    cached_single_phase["SPL"] = res["SPL"]
+                means["SPL"][j] += cached_single_phase["SPL"]
+            if "RS+FD" in keys:
+                if j == 0:
+                    cached_single_phase["RS+FD"] = res["RS+FD"]
+                means["RS+FD"][j] += cached_single_phase["RS+FD"]
+
+    # Average over runs
+    for k in keys:
+        means[k] /= R
+
+    # -------- Plot (keep your exact sizes; only legend layout is custom) --------
     plt.figure(figsize=(10, 8))
-    plt.plot(ds, means["SPL"],   '-o', linewidth=3, markersize=16, label='SPL')
-    plt.plot(ds, means["RS+FD"], '-s', linewidth=3, markersize=16, label='RS+FD')
-    plt.plot(ds, means["RS+RFD"],'-^', linewidth=3, markersize=16, label='RS+RFD')
-    if use_corr_rr:
-        plt.plot(ds, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
+    x_vals = [int(100 * f) for f in fractions]
 
-    plt.xlabel('Number of Attributes', fontsize=40)
+    plt.plot(x_vals, means["SPL"],    '-o', linewidth=3, markersize=16, label='SPL')
+    plt.plot(x_vals, means["RS+FD"],  '-s', linewidth=3, markersize=16, label='RS+FD')
+    plt.plot(x_vals, means["RS+RFD"], '-^', linewidth=3, markersize=16, label='RS+RFD')
+    if use_corr_rr:
+        plt.plot(x_vals, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
+
+    plt.xlabel('Users in Phase I (%)', fontsize=40)
     plt.ylabel('MSE', fontsize=40)
-    plt.xticks(ds, labels=[str(x) for x in ds])
+    plt.xticks(x_vals, labels=[f"{x}" for x in x_vals])
     plt.tick_params(axis='both', which='major', labelsize=30)
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-    plt.legend(fontsize=35, loc='upper left', frameon=True, edgecolor='black')
+
+    # Legend at top center, 2 columns (=> 2 rows for 4 items). Tweak spacing as needed.
+    plt.legend(
+        fontsize=35,
+        loc='upper center',
+        ncol=2,
+        frameon=True,
+        edgecolor='black',
+        bbox_to_anchor=(0.50, 1.39),
+        labelspacing=0.01,   # vertical space between rows
+        columnspacing=1.0,   # horizontal space between columns
+        handletextpad=0.8,   # space between marker and text
+        handlelength=2       # line symbol length
+    )
+
+    # Make room for the legend above without changing fonts
     plt.tight_layout()
+    plt.subplots_adjust(top=0.80)
 
     # Filenames
     def _fmt(x): return f"{x:g}"
-    base = f"mseVSd_eps_{_fmt(epsilon)}_n_{n}_rho_{_fmt(corr)}_k_{len(domain)}"
-    base = f"fig_"
-
+    base = f"mseVSphase1_{attr_count}attr_{domain_size}domain_n_{n}_eps_{_fmt(epsilon)}_rho_{_fmt(corr)}"
 
     if plot_dir:
         os.makedirs(plot_dir, exist_ok=True)
-        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf")
+        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf", bbox_inches="tight", pad_inches=0.2)
 
     plt.show()
 
     if csv_dir:
         os.makedirs(csv_dir, exist_ok=True)
-        df_out = pd.DataFrame({"d": list(ds)})
+        df_out = pd.DataFrame({"phase1_pct": x_vals})
         for k in keys:
             df_out[k] = means[k]
-        df_out.to_csv(os.path.join(csv_dir, file + ".csv"), index=False)
+        df_out.to_csv(os.path.join(csv_dir, base + ".csv"), index=False)
+
+    # print("Users in Phase I (%) =", x_vals)
+    # for k in keys:
+    #     print(f"{k} MSE =", means[k])
 
     return means
+means = sweep_vs_phase1(
+    n=200,
+    epsilon=0.1,            # pick the ε you want to hold fixed
+    R=1,
+    corr=0.1,
+    d=2,
+    domain=[0,1,2,3],
+    x1_marginal={0:0.4, 1:0.3, 2:0.2, 3:0.1},  # or None for uniform
+    q_marginal=None,        # None => uniform in the non-copy branch
 
-
-
-
-if __name__ == "__main__":
-    # Choose a fixed epsilon
-    fixed_eps = 0.1
-
-    # Attribute counts to test
-    ds = [2, 3, 4, 5, 6]
-
-    # Data spec (reuse your earlier choices or tweak)
-    domain = [0, 1, 2, 3]
-    x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    rho = 0.9
-    q = None  # uniform for non-copy branch
-
-    means_d = sweep_over_d(
-        ds=ds,
-        epsilon=fixed_eps,
-        n=200,
-        R=1,
-        corr=rho,
-        domain=domain,
-        x1_marginal=x1_marginal,
-        q_marginal=q,
-        seed=42,
-        use_corr_rr=True,
-        frac_phase1_corr=0.2,
-        frac_phase1_rsrfd=0.2,
-        #plot_dir="/Users/shafizurrahmanseeam/Desktop/corr-rr/Corr-RR/experiments_notebook",
-        #file="fig_5a",
-     
-    )
+    seed=42,
+    use_corr_rr=True,
+    fractions=(0.10, 0.20, 0.30, 0.40, 0.50),
+    # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
+    # file="fig_9a",
+)

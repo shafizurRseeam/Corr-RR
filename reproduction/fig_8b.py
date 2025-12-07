@@ -2,8 +2,6 @@ import sys, os
 
 
 
-
-
 # Detect if running inside Jupyter
 if "__file__" in globals():
     # Running as a .py script
@@ -123,48 +121,57 @@ def run_all_once(
 
     return out
 
-
-def sweep_over_d(
-    ds=(2, 3, 4, 5, 6),
-    epsilon=0.6,
+def sweep_rho_all_progressive(
     n=10000,
+    rhos=(0.1, 0.3, 0.5, 0.7, 0.9),
+    epsilon=0.6,
     R=50,
-    corr=0.9,                
+    d=4,
     domain=None,
-    x1_marginal=None,        
-    q_marginal=None,          
+    x1_marginal=None,
+    q_marginal=None,
+    plot_dir=None,
+    csv_dir=None,
+    data_dir=None,   # NEW: to save all per-run results
     seed=None,
     use_corr_rr=True,
     frac_phase1_corr=0.1,
     frac_phase1_rsrfd=0.1,
-    plot_dir=None,
-    csv_dir=None,
     file=None,
 ):
+    """
+    Sweep over correlation strength (rho) for the PROGRESSIVE model while fixing epsilon.
+    Produces MSE vs rho plot and saves averaged + raw results.
+    """
 
+    # ---------- Defaults ----------
     if domain is None:
         domain = [0, 1]
-
     if x1_marginal is None:
         x1_marginal = {v: 1.0 / len(domain) for v in domain}
 
     keys = ["SPL", "RS+FD", "RS+RFD"] + (["Corr-RR"] if use_corr_rr else [])
-    means = {k: np.zeros(len(ds), dtype=float) for k in keys}
+    means = {k: np.zeros(len(rhos)) for k in keys}
+    raw_records = []  # to store per-run results
 
     if seed is not None:
         np.random.seed(seed)
 
-    for idx, d in enumerate(ds):
+    # =====================================================
+    # Sweep across rho values
+    # =====================================================
+    for j, rho in enumerate(rhos):
+        df = gen_progressive(
+            n=n,
+            domain=domain,
+            d=d,
+            x1_marginal=x1_marginal,
+            rho=rho,
+            q_marginal=q_marginal,
+            seed=seed,
+        )
+
         for run in range(R):
-            df = gen_star_from_x1(
-                n=n,
-                domain=domain,
-                d=d,
-                x1_marginal=x1_marginal,
-                rho=corr,
-                q_marginal=q_marginal,
-                seed=None if seed is None else (seed + run + int(1000 * corr) + 17 * d),
-            )
             res = run_all_once(
                 df,
                 epsilon,
@@ -173,78 +180,106 @@ def sweep_over_d(
                 frac_phase1_rsrfd=frac_phase1_rsrfd,
             )
             for k in keys:
-                means[k][idx] += res[k]
+                means[k][j] += res[k]
+                raw_records.append({
+                    "rho": rho,
+                    "run": run + 1,
+                    "epsilon": epsilon,
+                    "mechanism": k,
+                    "mse": res[k]
+                })
 
-        for k in keys:
-            means[k][idx] /= R
+    # Average MSEs
+    for k in keys:
+        means[k] /= R
 
-    # ---- Plot MSE vs d ----
+    # =====================================================
+    # Plotting
+    # =====================================================
     plt.figure(figsize=(10, 8))
-    plt.plot(ds, means["SPL"],   '-o', linewidth=3, markersize=16, label='SPL')
-    plt.plot(ds, means["RS+FD"], '-s', linewidth=3, markersize=16, label='RS+FD')
-    plt.plot(ds, means["RS+RFD"],'-^', linewidth=3, markersize=16, label='RS+RFD')
+    plt.plot(rhos, means["SPL"], '-o', linewidth=3, markersize=16, label='SPL')
+    plt.plot(rhos, means["RS+FD"], '-s', linewidth=3, markersize=16, label='RS+FD')
+    plt.plot(rhos, means["RS+RFD"], '-^', linewidth=3, markersize=16, label='RS+RFD')
     if use_corr_rr:
-        plt.plot(ds, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
+        plt.plot(rhos, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
 
-    plt.xlabel('Number of Attributes', fontsize=40)
+    plt.xlabel(r'$\rho$', fontsize=50)
     plt.ylabel('MSE', fontsize=40)
-    plt.xticks(ds, labels=[str(x) for x in ds])
+    plt.xticks(rhos, labels=[str(round(r, 1)) for r in rhos])
     plt.tick_params(axis='both', which='major', labelsize=30)
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-    plt.legend(fontsize=35, loc='upper left', frameon=True, edgecolor='black')
+
+    # Legend outside top center
+    legend = plt.legend(
+        fontsize=35,
+        loc='lower center',
+        ncol=2,
+        frameon=True,
+        edgecolor='black',
+        bbox_to_anchor=(0.5, 1.02),
+        labelspacing=0.15,
+        columnspacing=0.8,
+        handletextpad=0.8,
+        handlelength=2
+    )
+
     plt.tight_layout()
+    plt.subplots_adjust(top=0.82)
 
-    # Filenames
-    def _fmt(x): return f"{x:g}"
-    base = f"mseVSd_eps_{_fmt(epsilon)}_n_{n}_rho_{_fmt(corr)}_k_{len(domain)}"
-    base = f"fig_"
+    # =====================================================
+    # Save Outputs
+    # =====================================================
+    base = f"mseVSrho_progressive_{d}attr_{len(domain)}domain_n_{n}_eps_{epsilon}"
 
-
+    # 1) Figure
     if plot_dir:
         os.makedirs(plot_dir, exist_ok=True)
-        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf")
-
+        plt.savefig(
+            os.path.join(plot_dir, file + ".pdf"),
+            format="pdf",
+            bbox_extra_artists=(legend,),
+            bbox_inches='tight'
+        )
     plt.show()
 
+    # 2) Averaged MSE (MSE vs rho)
     if csv_dir:
-        os.makedirs(csv_dir, exist_ok=True)
-        df_out = pd.DataFrame({"d": list(ds)})
+        df_out = pd.DataFrame({"rho": list(rhos)})
         for k in keys:
             df_out[k] = means[k]
-        df_out.to_csv(os.path.join(csv_dir, file + ".csv"), index=False)
+        os.makedirs(csv_dir, exist_ok=True)
+        df_out.to_csv(os.path.join(csv_dir, base + ".csv"), index=False)
+
+    # 3) Raw all-run results
+    if data_dir:
+        os.makedirs(data_dir, exist_ok=True)
+        df_raw = pd.DataFrame(raw_records)
+        df_raw.to_csv(os.path.join(data_dir, f"raw_{base}.csv"), index=False)
 
     return means
 
 
-
-
 if __name__ == "__main__":
-    # Choose a fixed epsilon
-    fixed_eps = 0.1
-
-    # Attribute counts to test
-    ds = [2, 3, 4, 5, 6]
-
-    # Data spec (reuse your earlier choices or tweak)
+    
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    rho = 0.9
-    q = None  # uniform for non-copy branch
-
-    means_d = sweep_over_d(
-        ds=ds,
-        epsilon=fixed_eps,
-        n=200,
-        R=1,
-        corr=rho,
-        domain=domain,
-        x1_marginal=x1_marginal,
-        q_marginal=q,
+    n = 200
+    R = 1
+    eps_fixed = 0.5
+    rho_values = [0.1, 0.3, 0.5, 0.7, 0.9]
+    d=3
+    means_rho = sweep_rho_all_progressive(
+        n=n,
+        rhos=rho_values,
+        epsilon=eps_fixed,
+        R=R,
+        d=d,
         seed=42,
         use_corr_rr=True,
+        domain=domain,
+        x1_marginal=x1_marginal,
         frac_phase1_corr=0.2,
         frac_phase1_rsrfd=0.2,
-        #plot_dir="/Users/shafizurrahmanseeam/Desktop/corr-rr/Corr-RR/experiments_notebook",
-        #file="fig_5a",
-     
+        # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
+        # file="fig_7a",
     )

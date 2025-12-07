@@ -1,3 +1,6 @@
+
+
+
 import sys, os
 
 
@@ -124,15 +127,16 @@ def run_all_once(
     return out
 
 
-def sweep_over_d(
+
+def sweep_over_d_progressive(
     ds=(2, 3, 4, 5, 6),
     epsilon=0.6,
     n=10000,
     R=50,
-    corr=0.9,                
+    rho=0.9,
     domain=None,
-    x1_marginal=None,        
-    q_marginal=None,          
+    x1_marginal=None,
+    q_marginal=None,
     seed=None,
     use_corr_rr=True,
     frac_phase1_corr=0.1,
@@ -142,9 +146,9 @@ def sweep_over_d(
     file=None,
 ):
 
+
     if domain is None:
         domain = [0, 1]
-
     if x1_marginal is None:
         x1_marginal = {v: 1.0 / len(domain) for v in domain}
 
@@ -155,16 +159,20 @@ def sweep_over_d(
         np.random.seed(seed)
 
     for idx, d in enumerate(ds):
+
+       
+        df = gen_progressive(
+            n=n,
+            domain=domain,
+            d=d,
+            x1_marginal=x1_marginal,
+            rho=rho,
+            q_marginal=q_marginal,
+            seed=seed if seed is not None else None,
+        )
+
+
         for run in range(R):
-            df = gen_star_from_x1(
-                n=n,
-                domain=domain,
-                d=d,
-                x1_marginal=x1_marginal,
-                rho=corr,
-                q_marginal=q_marginal,
-                seed=None if seed is None else (seed + run + int(1000 * corr) + 17 * d),
-            )
             res = run_all_once(
                 df,
                 epsilon,
@@ -178,7 +186,9 @@ def sweep_over_d(
         for k in keys:
             means[k][idx] /= R
 
-    # ---- Plot MSE vs d ----
+    # --------------------------------------------------------
+    # ✅ Plot MSE vs d
+    # --------------------------------------------------------
     plt.figure(figsize=(10, 8))
     plt.plot(ds, means["SPL"],   '-o', linewidth=3, markersize=16, label='SPL')
     plt.plot(ds, means["RS+FD"], '-s', linewidth=3, markersize=16, label='RS+FD')
@@ -194,11 +204,7 @@ def sweep_over_d(
     plt.legend(fontsize=35, loc='upper left', frameon=True, edgecolor='black')
     plt.tight_layout()
 
-    # Filenames
-    def _fmt(x): return f"{x:g}"
-    base = f"mseVSd_eps_{_fmt(epsilon)}_n_{n}_rho_{_fmt(corr)}_k_{len(domain)}"
-    base = f"fig_"
-
+    #base = f"mseVSd_progressive_eps_{epsilon}_n_{n}_rho_{rho}_k_{len(domain)}"
 
     if plot_dir:
         os.makedirs(plot_dir, exist_ok=True)
@@ -216,27 +222,30 @@ def sweep_over_d(
     return means
 
 
+# ---------------- example usage (fixed epsilon, vary d) ----------------
+
 
 
 if __name__ == "__main__":
     # Choose a fixed epsilon
-    fixed_eps = 0.1
+    fixed_eps = 0.5
 
     # Attribute counts to test
     ds = [2, 3, 4, 5, 6]
+   # ds = [2]
 
     # Data spec (reuse your earlier choices or tweak)
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    rho = 0.9
+    rho = 0.1
     q = None  # uniform for non-copy branch
 
-    means_d = sweep_over_d(
+    means_d = sweep_over_d_progressive(
         ds=ds,
         epsilon=fixed_eps,
         n=200,
         R=1,
-        corr=rho,
+        rho=rho,
         domain=domain,
         x1_marginal=x1_marginal,
         q_marginal=q,
@@ -245,6 +254,5 @@ if __name__ == "__main__":
         frac_phase1_corr=0.2,
         frac_phase1_rsrfd=0.2,
         #plot_dir="/Users/shafizurrahmanseeam/Desktop/corr-rr/Corr-RR/experiments_notebook",
-        #file="fig_5a",
-     
+        #file="fig_6a",
     )
