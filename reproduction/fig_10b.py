@@ -246,7 +246,7 @@ def sweep_all_progressive(
         ncol=2,
         frameon=True,
         edgecolor='black',
-        bbox_to_anchor=(0.50, 1.38),
+        bbox_to_anchor=(0.50, 1.39),
         labelspacing=0.01,   # vertical space between rows
         columnspacing=1.0,   # horizontal space between columns
         handletextpad=0.8,   # space between marker and text
@@ -255,7 +255,7 @@ def sweep_all_progressive(
 
     # Make room for the legend above without changing fonts
     plt.tight_layout()
-    plt.subplots_adjust(top=0.82)
+    plt.subplots_adjust(top=0.80)
 
     # Filenames
     def _fmt(x): return f"{x:g}"
@@ -282,9 +282,9 @@ def sweep_all_progressive(
 
 means = sweep_all_progressive(
     n=200,
-    epsilon=0.3,            # pick the ε you want to hold fixed
+    epsilon=0.1,            # pick the ε you want to hold fixed
     R=1,
-    corr=0.1,
+    corr=0.3,
     d=2,
     domain=[0,1,2,3],
     x1_marginal={0:0.4, 1:0.3, 2:0.2, 3:0.1},  # or None for uniform

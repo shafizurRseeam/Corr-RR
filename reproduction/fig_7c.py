@@ -2,8 +2,6 @@ import sys, os
 
 
 
-
-
 # Detect if running inside Jupyter
 if "__file__" in globals():
     # Running as a .py script
@@ -34,7 +32,6 @@ from utils.corr_rr_fixed_new import (
     optimal_p_y,
     build_p_y_table,
 )
-
 
 
 mpl.rcParams['pdf.fonttype'] = 42   # TrueType
@@ -110,6 +107,7 @@ def run_all_once(
     combined_rsrfd = combine_phase_estimates(est_I_rsrfd, est_II_rsrfd, n1_rsrfd, n2_rsrfd)
     out["RS+RFD"] = np.mean([compute_mse(true_freqs[c], combined_rsrfd[c]) for c in cols])
 
+    # Corr-RR
     if use_corr_rr:
         est_I, df_B, doms_stable = corr_rr_phase1_spl(df, epsilon, frac=frac_phase1_corr)
         n1 = len(df) - len(df_B)
@@ -123,130 +121,166 @@ def run_all_once(
 
     return out
 
-# ---------------- sweep & plot ----------------
-def sweep_all(
+def sweep_rho_all(
     n=10000,
-    epsilons=(0.2, 0.4, 0.6, 0.8, 1.0),
+    rhos=(0.1, 0.3, 0.5, 0.7, 0.9),
+    epsilon=0.6,
     R=50,
-    corr=0.9,                 # global rho: every Xj (j>=2) correlates to X1
-    d=4,                      # total attributes generated
+    d=4,
     domain=None,
-    x1_marginal=None,         # marginal p for X1 (and X1 only)
-    q_marginal=None,          # None => uniform for non-copy branch
+    x1_marginal=None,
+    q_marginal=None,
     plot_dir=None,
     csv_dir=None,
+    data_dir=None,  # <--- NEW: raw results directory
     seed=None,
     use_corr_rr=True,
     frac_phase1_corr=0.1,
     frac_phase1_rsrfd=0.1,
-    file=None,
+    file=None, 
 ):
     """
-    Star model data: X1 ~ p; for j=2..d, Xj = X1 w.p. corr else ~ q.
+    Sweep over correlation strength (rho) while fixing epsilon.
+    Produces MSE vs rho plot using the STAR dependency generator.
+    Saves both averaged and raw MSE data in CSV format.
     """
+
     if domain is None:
         domain = [0, 1]
-
     if x1_marginal is None:
-        # default balanced marginal on the given domain
         x1_marginal = {v: 1.0 / len(domain) for v in domain}
 
     keys = ["SPL", "RS+FD", "RS+RFD"] + (["Corr-RR"] if use_corr_rr else [])
-    means = {k: np.zeros(len(epsilons)) for k in keys}
+    means = {k: np.zeros(len(rhos)) for k in keys}
+    raw_records = []  # store all runs for data_dir CSV
 
     if seed is not None:
         np.random.seed(seed)
 
-    attr_count = d
-    domain_size = len(domain)
-
-    for run in range(R):
-        # ---- NEW: star generator ----
+    # =====================================================
+    # sweep across rho values
+    # =====================================================
+    for j, rho in enumerate(rhos):
         df = gen_star_from_x1(
             n=n,
             domain=domain,
             d=d,
             x1_marginal=x1_marginal,
-            rho=corr,
+            rho=rho,
             q_marginal=q_marginal,
-            seed=None if seed is None else (seed + run + int(1000 * corr)),
+            seed=seed,
         )
 
-        for j, eps in enumerate(epsilons):
+        for run in range(R):
             res = run_all_once(
                 df,
-                eps,
+                epsilon,
                 use_corr_rr=use_corr_rr,
                 frac_phase1_corr=frac_phase1_corr,
                 frac_phase1_rsrfd=frac_phase1_rsrfd,
             )
             for k in keys:
                 means[k][j] += res[k]
+                raw_records.append({
+                    "rho": rho,
+                    "run": run + 1,
+                    "epsilon": epsilon,
+                    "mechanism": k,
+                    "mse": res[k]
+                })
 
+    # average results
     for k in keys:
         means[k] /= R
 
-    # Plot
+    # =====================================================
+    # plotting
+    # =====================================================
     plt.figure(figsize=(10, 8))
-    plt.plot(epsilons, means["SPL"],         '-o', linewidth=3, markersize=16, label='SPL')
-    plt.plot(epsilons, means["RS+FD"],       '-s', linewidth=3, markersize=16, label='RS+FD')
-    plt.plot(epsilons, means["RS+RFD"],      '-^', linewidth=3, markersize=16, label='RS+RFD')
+    plt.plot(rhos, means["SPL"], '-o', linewidth=3, markersize=16, label='SPL')
+    plt.plot(rhos, means["RS+FD"], '-s', linewidth=3, markersize=16, label='RS+FD')
+    plt.plot(rhos, means["RS+RFD"], '-^', linewidth=3, markersize=16, label='RS+RFD')
     if use_corr_rr:
-        plt.plot(epsilons, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
-    #print(means["Corr-RR"])
-    plt.xlabel(r'$ϵ$', fontsize=50)
-    plt.ylabel('MSE',  fontsize=40)
-    plt.xticks(epsilons, labels=[str(e) for e in epsilons])
+        plt.plot(rhos, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
+
+    plt.xlabel(r'$\rho$', fontsize=50)
+    plt.ylabel('MSE', fontsize=40)
+    plt.xticks(rhos, labels=[str(round(r, 1)) for r in rhos])
     plt.tick_params(axis='both', which='major', labelsize=30)
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-    plt.legend(fontsize=35, loc='upper right', frameon=True, edgecolor='black')
+
+    # ---- legend outside top center ----
+    legend = plt.legend(
+        fontsize=35,
+        loc='lower center',
+        ncol=2,
+        frameon=True,
+        edgecolor='black',
+        bbox_to_anchor=(0.5, 1.02),
+        labelspacing=0.15,
+        columnspacing=0.8,
+        handletextpad=0.8,
+        handlelength=2
+    )
+
     plt.tight_layout()
+    plt.subplots_adjust(top=0.82)
 
-    # Output filenames
-    def _fmt(x): return f"{x:g}"
-    base = f"mseVSepsilon_{attr_count}attr_{domain_size}domain_n_{n}_frac_{_fmt(frac_phase1_rsrfd)}_rho_{_fmt(corr)}"
+    base = f"mseVSrho_{d}attr_{len(domain)}domain_n_{n}_eps_{epsilon}"
 
+    # =====================================================
+    # save outputs
+    # =====================================================
+
+    # --- 1) Save figure ---
     if plot_dir:
         os.makedirs(plot_dir, exist_ok=True)
-        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf")
-
+        plt.savefig(
+            os.path.join(plot_dir, file + ".pdf"),
+            format="pdf",
+            bbox_extra_artists=(legend,),
+            bbox_inches='tight'
+        )
     plt.show()
 
+    # --- 2) Save averaged results (MSE vs rho) ---
     if csv_dir:
-        os.makedirs(csv_dir, exist_ok=True)
-        df_out = pd.DataFrame({"epsilon": list(epsilons)})
+        df_out = pd.DataFrame({"rho": list(rhos)})
         for k in keys:
             df_out[k] = means[k]
+        os.makedirs(csv_dir, exist_ok=True)
         df_out.to_csv(os.path.join(csv_dir, base + ".csv"), index=False)
+
+    # --- 3) Save raw results (all runs) ---
+    if data_dir:
+        os.makedirs(data_dir, exist_ok=True)
+        df_raw = pd.DataFrame(raw_records)
+        df_raw.to_csv(os.path.join(data_dir, f"raw_{base}.csv"), index=False)
 
     return means
 
 
-
-# ---------------- main ----------------
 if __name__ == "__main__":
-    eps = [0.1, 0.2, 0.3, 0.4, 0.5]
-
-    # Data spec
+    
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    d = 4                # X1..X4 (all X2..X4 correlated to X1 with the same rho)
-    rho = 0.1            # correlation to X1 for every other attribute
-    q = None             # None => uniform base for non-copy draws
-
-    means = sweep_all(
-        n=200,
-        epsilons=eps,
-        R=1,
-        corr=rho,
+    n = 200
+    R = 1
+    eps_fixed = 0.5
+    rho_values = [0.1, 0.3, 0.5, 0.7, 0.9]
+    d=4
+    means_rho = sweep_rho_all(
+        n=n,
+        rhos=rho_values,
+        epsilon=eps_fixed,
+        R=R,
         d=d,
-        domain=domain,
-        x1_marginal=x1_marginal,
-        q_marginal=q,
         seed=42,
         use_corr_rr=True,
+        domain=domain,
+        x1_marginal=x1_marginal,
         frac_phase1_corr=0.2,
         frac_phase1_rsrfd=0.2,
         # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
-        # file="fig_3a",
+        # file="fig_8a",
     )

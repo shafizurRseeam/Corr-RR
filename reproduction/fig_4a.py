@@ -223,6 +223,117 @@ def sweep_all(
 
 
 
+
+def sweep_all_progressive(
+    n=10000,
+    epsilons=(0.2, 0.4, 0.6, 0.8, 1.0),
+    R=50,
+    rho=0.9,                 # global copy probability
+    d=4,                     # total attributes
+    domain=None,
+    x1_marginal=None,
+    q_marginal=None,
+    plot_dir=None,
+    csv_dir=None,
+    seed=None,
+    use_corr_rr=True,
+    frac_phase1_corr=0.1,
+    frac_phase1_rsrfd=0.1,
+    file=None,
+):
+    """
+    Fixed-dataset sweep for the PROGRESSIVE dependency model:
+      - Generate ONE synthetic dataset using gen_progressive().
+      - Print its Pearson correlation matrix.
+      - Run all mechanisms multiple times on that SAME dataset.
+    """
+
+    # -------------------------------
+    # defaults
+    # -------------------------------
+    if domain is None:
+        domain = [0, 1]
+
+    if x1_marginal is None:
+        x1_marginal = {v: 1.0 / len(domain) for v in domain}
+
+    keys = ["SPL", "RS+FD", "RS+RFD"] + (["Corr-RR"] if use_corr_rr else [])
+    means = {k: np.zeros(len(epsilons)) for k in keys}
+
+    if seed is not None:
+        np.random.seed(seed)
+
+    # =========================================================
+    # 1) Generate ONE fixed progressive dataset
+    # =========================================================
+    df = gen_progressive(
+        n=n,
+        domain=domain,
+        d=d,
+        x1_marginal=x1_marginal,
+        rho=rho,
+        q_marginal=q_marginal,
+        seed=seed
+    )
+
+
+    if csv_dir:
+        os.makedirs(csv_dir, exist_ok=True)
+        corr_mat.to_csv(os.path.join(csv_dir, "pearson_corr_matrix_progressive.csv"))
+
+    # =========================================================
+    # 3) Sweep all mechanisms on the SAME dataset
+    # =========================================================
+    for run in range(R):
+        for j, eps in enumerate(epsilons):
+            res = run_all_once(
+                df,
+                eps,
+                use_corr_rr=use_corr_rr,
+                frac_phase1_corr=frac_phase1_corr,
+                frac_phase1_rsrfd=frac_phase1_rsrfd,
+            )
+            for k in keys:
+                means[k][j] += res[k]
+
+    for k in keys:
+        means[k] /= R
+
+    # =========================================================
+    # 4) Plotting
+    # =========================================================
+    plt.figure(figsize=(10, 8))
+    plt.plot(epsilons, means["SPL"],         '-o', linewidth=3, markersize=16, label='SPL')
+    plt.plot(epsilons, means["RS+FD"],       '-s', linewidth=3, markersize=16, label='RS+FD')
+    plt.plot(epsilons, means["RS+RFD"],      '-^', linewidth=3, markersize=16, label='RS+RFD')
+    if use_corr_rr:
+        plt.plot(epsilons, means["Corr-RR"], '-D', linewidth=3, markersize=16, label='Corr-RR')
+
+    plt.xlabel(r'$ϵ$', fontsize=50)
+    plt.ylabel('MSE',  fontsize=40)
+    plt.xticks(epsilons, labels=[str(e) for e in epsilons])
+    plt.tick_params(axis='both', which='major', labelsize=30)
+    plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+    plt.legend(fontsize=35, loc='upper right', frameon=True, edgecolor='black')
+    plt.tight_layout()
+
+    base = f"mseVSepsilon_progressive_{d}attr_{len(domain)}domain_n_{n}_rho_{rho}"
+
+    if plot_dir:
+        os.makedirs(plot_dir, exist_ok=True)
+        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf")
+
+    plt.show()
+
+    if csv_dir:
+        df_out = pd.DataFrame({"epsilon": list(epsilons)})
+        for k in keys:
+            df_out[k] = means[k]
+        df_out.to_csv(os.path.join(csv_dir, base + ".csv"), index=False)
+
+    return means
+
+
 # ---------------- main ----------------
 if __name__ == "__main__":
     eps = [0.1, 0.2, 0.3, 0.4, 0.5]
@@ -231,22 +342,24 @@ if __name__ == "__main__":
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
     d = 4                # X1..X4 (all X2..X4 correlated to X1 with the same rho)
-    rho = 0.9            # correlation to X1 for every other attribute
+    rho = 0.1            # correlation to X1 for every other attribute
     q = None             # None => uniform base for non-copy draws
 
-    means = sweep_all(
+    means = sweep_all_progressive(
         n=200,
         epsilons=eps,
         R=1,
-        corr=rho,
-        d=d,
+        rho=0.9,                 # global copy probability
+        d=4,                     # total attributes
         domain=domain,
         x1_marginal=x1_marginal,
         q_marginal=q,
+       
         seed=42,
         use_corr_rr=True,
-        frac_phase1_corr=0.2,
-        frac_phase1_rsrfd=0.2,
+        frac_phase1_corr=0.1,
+        frac_phase1_rsrfd=0.1,
         # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
-        # file="fig_3a",
-    )
+        # file="fig_4a",
+)
+
