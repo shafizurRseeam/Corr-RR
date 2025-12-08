@@ -58,7 +58,7 @@ mpl.rcParams['mathtext.fontset'] = 'cm'     # Math font
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.size'] = 30
 # ---------------- helpers ----------------
-def _normalize_dist(d):
+def normalize_dist(d):
     vals = np.array([max(0.0, float(v)) for v in d.values()], dtype=float)
     s = vals.sum()
     if s <= 0:
@@ -187,7 +187,7 @@ def sweep_realworld(
 if __name__ == "__main__":
 
     dataset_name = "adult"   # <<< change to: "clave" or "mushroom"
-    dataset_path = f"{project_root}/preprocessed_real_data/{dataset_name}.csv"
+    dataset_path = f"{project_root}/preprocessed_data/{dataset_name}.csv"
 
     df = pd.read_csv(dataset_path)
 

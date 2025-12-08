@@ -163,7 +163,7 @@ def correlation_table_syna_synb(
     # Determine widths
     col_widths = [max(len(h), 12) for h in header]
 
-    # Print header
+ 
     line = "".join(h.ljust(col_widths[i]) for i, h in enumerate(header))
     print("\n" + line)
     print("-" * len(line))

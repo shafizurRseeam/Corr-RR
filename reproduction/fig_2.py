@@ -81,8 +81,4 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 
-    # --- save ---
-    #out_path = r"C:\Users\ss6365\Desktop\Corr-RR\fig\py_all.pdf"
-    #plt.savefig(out_path, bbox_inches='tight')
-
-    #print(f"Plot saved to: {out_path}")
+  

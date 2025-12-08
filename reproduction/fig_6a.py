@@ -240,8 +240,8 @@ if __name__ == "__main__":
     means_d = sweep_over_d_progressive(
         ds=ds,
         epsilon=fixed_eps,
-        n=200,
-        R=1,
+        n=20000,
+        R=50,
         rho=rho,
         domain=domain,
         x1_marginal=x1_marginal,

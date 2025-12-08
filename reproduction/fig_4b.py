@@ -346,10 +346,10 @@ if __name__ == "__main__":
     q = None             # None => uniform base for non-copy draws
 
     means = sweep_all_progressive(
-        n=200,
+        n=20000,
         epsilons=eps,
-        R=1,
-        rho=0.9,                 # global copy probability
+        R=50,
+        rho=0.5,                 # global copy probability
         d=4,                     # total attributes
         domain=domain,
         x1_marginal=x1_marginal,

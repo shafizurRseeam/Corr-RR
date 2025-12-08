@@ -263,8 +263,8 @@ if __name__ == "__main__":
     
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
-    n = 200
-    R = 1
+    n = 20000
+    R = 200
     eps_fixed = 0.5
     rho_values = [0.1, 0.3, 0.5, 0.7, 0.9]
     d=2
@@ -281,5 +281,5 @@ if __name__ == "__main__":
         frac_phase1_corr=0.2,
         frac_phase1_rsrfd=0.2,
         # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
-        # file="fig_7a",
+        # file="fig_8a",
     )

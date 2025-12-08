@@ -281,14 +281,12 @@ def sweep_all_progressive(
     return means
 
 means = sweep_all_progressive(
-    n=200,
+    n=20000,
     epsilon=0.1,            # pick the ε you want to hold fixed
-    R=1,
-    corr=0.1,
+    R=50,
+    corr=0.9,
     d=2,
     domain=[0,1,2,3],
-    x1_marginal={0:0.4, 1:0.3, 2:0.2, 3:0.1},  # or None for uniform
-    q_marginal=None,        # None => uniform in the non-copy branch
     #plot_dir="plots",
     #csv_dir="csvs",
     seed=42,

@@ -47,7 +47,7 @@ def dataset_stats(df):
 if __name__ == "__main__":
 
     # YOU ONLY NEED TO CHANGE THIS
-    dataset_folder = "preprocessed_real_data"
+    dataset_folder = "preprocessed_data"
 
     folder_path = os.path.join(project_root, dataset_folder)
 

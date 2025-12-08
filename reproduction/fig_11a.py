@@ -68,6 +68,16 @@ def _normalize_dist(d):
         vals = vals / s
     return {k: vals[i] for i, k in enumerate(d.keys())}
 
+def normalize_dist(d):
+    vals = np.array([max(0.0, float(v)) for v in d.values()], dtype=float)
+    s = vals.sum()
+    if s <= 0:
+        k = len(vals)
+        vals = np.full(k, 1.0 / k)
+    else:
+        vals = vals / s
+    return {k: vals[i] for i, k in enumerate(d.keys())}
+
 
 
 def build_p_y_table(est_I, epsilon, n2, domain, cols):
@@ -158,11 +168,18 @@ def sweep_realworld(
     for k, marker in zip(keys, ['o', 's', '^', 'D']):
         plt.plot(epsilons, means[k], f'-{marker}', linewidth=3, markersize=14, label=k)
 
-    plt.xlabel(r"$\epsilon$", fontsize=40)
+
+
+
+    plt.xlabel(r"$\epsilon$", fontsize=50)
     plt.ylabel("MSE", fontsize=40)
-    plt.xticks(epsilons, fontsize=25)
-    plt.yticks(fontsize=25)
-    plt.legend(fontsize=30)
+
+    # ✨ Force scientific notation on the x-axis
+    plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+
+    plt.xticks(epsilons, fontsize=30)
+    plt.yticks(fontsize=30)
+    plt.legend(fontsize=35)
     plt.tight_layout()
 
     if plot_dir:
@@ -187,7 +204,7 @@ def sweep_realworld(
 if __name__ == "__main__":
 
     dataset_name = "clave"   # <<< change to: "clave" or "mushroom"
-    dataset_path = f"{project_root}/preprocessed_real_data/{dataset_name}.csv"
+    dataset_path = f"{project_root}/preprocessed_data/{dataset_name}.csv"
 
     df = pd.read_csv(dataset_path)
 
@@ -199,6 +216,6 @@ if __name__ == "__main__":
         R=50,
         frac_corr=0.1,
         frac_rsrfd=0.1,
-        #plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
-        #file="fig_11a",
+        # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",
+        # file="fig_11a",
     )

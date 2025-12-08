@@ -156,7 +156,7 @@ if "__file__" in globals():
 else:
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
-data_path = os.path.join(project_root, "preprocessed_real_data", "clave.csv")
+data_path = os.path.join(project_root, "preprocessed_data", "clave.csv")
 
 df_c = pd.read_csv(data_path)
 

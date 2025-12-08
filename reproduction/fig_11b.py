@@ -57,8 +57,8 @@ mpl.rcParams.update({
 mpl.rcParams['mathtext.fontset'] = 'cm'     # Math font
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['font.size'] = 30
-# ---------------- helpers ----------------
-def _normalize_dist(d):
+
+def normalize_dist(d):
     vals = np.array([max(0.0, float(v)) for v in d.values()], dtype=float)
     s = vals.sum()
     if s <= 0:
@@ -67,7 +67,6 @@ def _normalize_dist(d):
     else:
         vals = vals / s
     return {k: vals[i] for i, k in enumerate(d.keys())}
-
 
 
 def build_p_y_table(est_I, epsilon, n2, domain, cols):
@@ -187,7 +186,7 @@ def sweep_realworld(
 if __name__ == "__main__":
 
     dataset_name = "mushroom"   # <<< change to: "clave" or "mushroom"
-    dataset_path = f"{project_root}/preprocessed_real_data/{dataset_name}.csv"
+    dataset_path = f"{project_root}/preprocessed_data/{dataset_name}.csv"
 
     df = pd.read_csv(dataset_path)
 

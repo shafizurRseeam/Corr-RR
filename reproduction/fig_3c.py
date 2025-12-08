@@ -227,7 +227,7 @@ def sweep_all(
 if __name__ == "__main__":
     eps = [0.1, 0.2, 0.3, 0.4, 0.5]
 
-    # Data spec
+
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
     d = 4                # X1..X4 (all X2..X4 correlated to X1 with the same rho)
