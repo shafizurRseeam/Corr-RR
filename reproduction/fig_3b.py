@@ -235,9 +235,9 @@ if __name__ == "__main__":
     q = None             # None => uniform base for non-copy draws
 
     means = sweep_all(
-        n=200,
+        n=20000,
         epsilons=eps,
-        R=1,
+        R=50,
         corr=rho,
         d=d,
         domain=domain,
