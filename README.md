@@ -71,7 +71,7 @@ Navigate to the project root and run:
 ```
 This command creates a virtual environment in the project root and installs the dependencies listed in `pyproject.toml`.
 
-▶️ Running Experiments
+## ▶️ Running Experiments
 ### Option 1 (Recommended) - Using `uv`
 The `reproduction` folder contains scripts for reproducing all figures and tables.
 
@@ -110,7 +110,7 @@ Results should match those in the paper (minor randomness expected).
 | **Tables 6 & 9**                                          | ~75 min                             | ~30 min                     |
 
 
-### Option 2 - — Jupyter Notebooks
+### Option 2 — Jupyter Notebooks
 
 The `experiments_notebook` folder contains self-contained Jupyter notebooks for interactive exploration: 
 
