@@ -1,28 +1,38 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2505.15483-<COLOR>.svg)](https://arxiv.org/abs/2505.15483)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[PETS'26] Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy
+This repository contains the official implementation and reproducibility package for the paper:
+
+“Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy” (PETS'26)
+
  
 
-**Contributions:** 
+**📘Contributions:** 
 
 * This paper proposes a two-phase LDP Framework, Correlated Randomized Response (Corr-RR), for Multi-attribute Correlated Data.
 * Corr-RR leverages inter-intributes correlations to derive correlation-aware parameter $p_y$ privately in Phase~I, which guides Phase~II perturbatio, and overall improves the frequency estiamtion. 
 
 ---
 
-The main folders and files are as follows:
+📁 Repository Structure: The main folders and files are as follows
 
 ```
-|- experiments_notebook (All experiments in Jupyter notebook. Parameters could be changed to see experiments on different settings)
-|- Figures (All the figures used in the paper)
-|- preprocessed_data (Pre-processed real-world datasets: Clave, Mushroom, Adults)
-|- reproduction (Reproduction of the results in the paper)
-|- utils (All required fuctions to run the experiments)
+|- experiments_notebook (All experiments in Jupyter notebooks)
+|- Figures (Figures used in the paper)
+|- preprocessed_data (Preprocessed real-world datasets (Clave, Mushroom, Adults))
+|- reproduction (Scripts to reproduce all results in the paper)
+|- utils (Utility functions for Corr-RR and baselines)
+|- ...
 ```
 
-## Reproduction 
+## 🔁 Reproduction 
 
+📥 Clone the Repository
+```bash
+git clone https://github.com/<YOUR_USERNAME>/<REPO_NAME>.git
+cd <REPO_NAME>
+```
+### ⚙️ Installation
 Tested environments: `uv` version `0.9.16` and Python version `3.12`~`3.13`.
 
 **Install UV package manager.**
@@ -33,56 +43,54 @@ We recommend using `uv` to create a virtual environment and install the dependen
 
 To install `uv`, follow the instructions in the "[uv installation](https://docs.astral.sh/uv/)".
 
-Here is a quick guide to install it in windows using powershell. 
+Below are quick-install commands.
 
 
-**Quick guide to install in Windows using Powershell.**
+**Windows (PowerShell)**
 
 ```bash
 PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
-**Quick guide to install in macOS and Linux using Terminal.**
+**macOS / Linux**
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-After installation, follow the prompts to add `uv` to your system's `PATH`.
-You can verify the installation by running the following command in your terminal (Windows, Linux, or macOS):
+After installation, ensure that `uv` is added to your system PATH. Verify installation:
 
 ```
 uv --version
 ```
-This should display the installed version of `uv`.
 
 **Install dependencies.**
-After installing `uv`, cd to the project root directory and run:
+Navigate to the project root and run:
 
 ```
 [PROJECT_ROOT]$ uv sync
 ```
 This command creates a virtual environment in the project root and installs the dependencies listed in `pyproject.toml`.
-You can then run the provided scripts to reproduce the results in the paper. Two options are available:
 
-### Option 1 (Quick) -- Recommended
-
-The `reproduction` folder contains scripts  to reproduce key results from the paper. The structure is as follows:
+▶️ Running Experiments
+### Option 1 (Recommended) - Using `uv`
+The `reproduction` folder contains scripts for reproducing all figures and tables.
 
 ```
 |- reproduction
   |- fig_2.py: Figure 2 (<1 Sec)
   |- figure_3a.py: Figure 12a  (<28 minute)
   |- table_2.py: Table 2 (Page 11~12)  (<1 sec)
-  |- ........
+  |- ...
 
 ```
 
-You can run these scripts directly with `uv run` (no need to manually activate the environment) to generate Figures and Tables:
+You can run these scripts directly with `uv run` (no need to manually activate the environment) to generate Figures and Tables. Run any script using:
 ```
 [PROJECT_ROOT]$ uv run ./reproduction/fig_3a.py
 ```
-This will display the corresponding figures using matplotlib, and the tables in terminal. All the figures and results should be printed as it is in the main paper, with some varioation due to the stochastic nature of the experiments.
+This will generate the figure using matplotlib or print the table in the terminal.
+Results should match those in the paper (minor randomness expected).
 
-**Following in the runtime comparison (Approximate runtimes; values rounded for readability.)**
+**⏱️Approximate Runtimes (Rounded)**
 
 
 | Figure Group                                              | Windows (Xeon W-2145, 32 GB RAM) | macOS (M2 Pro, 16 GB RAM) |
@@ -101,9 +109,9 @@ This will display the corresponding figures using matplotlib, and the tables in 
 | **Tables 6 & 9**                                          | ~75 min                             | ~30 min                     |
 
 
-### Option 2 (Detailed)
+### Option 2 - — Jupyter Notebooks
 
-The `experiments_notebook` folder contains jupyter notebook which is self contained. Interested ones can changes the parameters to see the results for different setting. 
+The `experiments_notebook` folder contains self-contained Jupyter notebooks for interactive exploration: 
 
 ```
 |- experiments_notebook
@@ -113,40 +121,8 @@ The `experiments_notebook` folder contains jupyter notebook which is self contai
   |- ........
 
 ```
-## Example Python Code
-
-```python
-def hello():
-    print("Hello, Seeam!")
-```
-
----
-
-## Example Bash Commands
-
-```bash
-git clone https://github.com/yourname/repo.git
-cd repo
-pip install -r requirements.txt
-```
-
----
+Users can modify parameters to explore different experimental settings.
 
 
 
-
-
-## Placeholder Sections (You can fill later)
-
-### 📘 Introduction
-(Add a short overview of the Corr-RR mechanism and goals.)
-
-### ⚙️ Installation
-(Explain how to install dependencies or set up environment.)
-
-### ▶️ Running Experiments
-(Show commands like: `python reproduction/fig_2.py`)
-
-### 📁 Project Structure
-(Brief explanation of folders: reproduction/, src/, data/, etc.)
 
