@@ -1,5 +1,13 @@
-# Corr-RR
-Two-phase LDP Framework for Multi-attribute Correlated Data
+[![arXiv](https://img.shields.io/badge/arXiv-2505.15483-<COLOR>.svg)](https://arxiv.org/abs/2505.15483)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[PETS'26] Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy
+ 
+
+**Contributions:** 
+
+*This paper proposes a two-phase LDP Framework, Correlated Randomized Response (Corr-RR), for Multi-attribute Correlated Data.
+* Corr-RR leverages inter-intributes correlations to derive correlation-aware parameter $p_y$ privately in Phase~I, which guides Phase~II perturbatio, and overall improves the frequency estiamtion. 
 
 ---
 
@@ -22,22 +30,24 @@ pip install -r requirements.txt
 
 ---
 
-## Runtime Comparison (Windows Xeon vs. macOS MacBook Pro)
+## Runtime Comparison (Windows Xeon W-2145 vs. MacBook Pro M2 Pro)
+*(Approximate runtimes; values rounded for readability.)*
 
-| Group / Figures                                       | Windows (Xeon)       | macOS (M3/M4 MBP)    |
-|--------------------------------------------------------|-----------------------|-----------------------|
-| **Fig 2**                                              | 2 s                   | 1 s                   |
-| **Fig 3 (a,b,c), Fig 4 (a,b,c)**                       | 75 min                | 28 min                |
-| **Fig 5 (a,b,c), Fig 6 (a,b,c), Fig 13 (a,b,c), Fig 14 (a,b,c)** | 80 min         | 30 min                |
-| **Fig 7 (a,b,c), Fig 8 (a,b,c)**                       | —                     | 1.5 h                 |
-| **Fig 9 (a,b,c), Fig 10 (a,b,c)**                      | 45 min                | 15 min                |
-| **Fig 11 (a,b,c)**                                     | 18m / 14m / 23m       | —                     |
-| **Fig 12 (a,b,c)**                                     | 3 s                   | 1 s                   |
-| **Table 2**                                            | 1 s                   | 2 s                   |
-| **Table 3**                                            | 1 s                   | 1 s                   |
-| **Tables 4 & 7**                                       | 3 min                 | 25 s                  |
-| **Tables 5 & 8**                                       | 13 min                | 4 min                 |
-| **Tables 6 & 9**                                       | 1.5 h                 | 30 min                |
+| Figure Group                                              | Windows (Xeon W-2145, 32 GB RAM) | macOS (M2 Pro, 16 GB RAM) |
+|-----------------------------------------------------------|-----------------------------------|----------------------------|
+| **Fig 2**                                                 | ~2 sec                               | ~1 sec                        |
+| **Fig 3 (a,b,c), Fig 4 (a,b,c)**                          | ~75 min                            | ~28 min                     |
+| **Fig 5 (a,b,c), Fig 6 (a,b,c), Fig 13 (a,b,c), Fig 14**  | ~80 min                            | ~30 min                     |
+| **Fig 7 (a,b,c), Fig 8 (a,b,c)**                          | —                                 | ~75 min                     |
+| **Fig 9 (a,b,c), Fig 10 (a,b,c)**                         | ~45 min                            | ~15 min                     |
+| **Fig 11 (a,b,c)**                                        | ~18min / ~14min / ~23min                   | —                          |
+| **Fig 12 (a,b,c)**                                        | ~3 sec                               | ~1 sec                        |
+| **Table 2**                                               | ~1 sec                               | ~2 sec                        |
+| **Table 3**                                               | ~1 sec                               | ~1 sec                        |
+| **Tables 4 & 7**                                          | ~3 min                             | ~25 sec                       |
+| **Tables 5 & 8**                                          | ~13 min                            | ~4 min                      |
+| **Tables 6 & 9**                                          | ~75 min                             | ~30 min                     |
+
 
 
 ## Placeholder Sections (You can fill later)
