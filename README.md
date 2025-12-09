@@ -11,6 +11,34 @@
 
 ---
 
+The main folders and files are as follows:
+
+```
+|- experiments_notebook (All experiments in Jupyter notebook. Parameters could be changed to see experiments on different settings)
+|- Figures (All the figures used in the paper)
+|- preprocessed_data (Pre-processed real-world datasets: Clave, Mushroom, Adults)
+|- reproduction (Reproduction of the results in the paper)
+|- utils (All required fuctions to run the experiments)
+```
+
+## Reproduction 
+
+Tested environments: `uv` version `0.7.11` and Python version `3.12`~`3.13`.
+
+**Install UV package manager.**
+This project is packaged by `uv`, a modern Python package management system similar to `miniconda` or `poetry`.
+All dependencies are listed in `pyproject.toml`.
+We recommend using `uv` to create a virtual environment and install the dependencies.
+
+
+To install `uv`, follow the instructions in the "[uv installation](https://docs.astral.sh/uv/)".
+
+Here is a quick guide to install it in windows using powershell. 
+
+After installation, follow the prompts to add `uv` to your system's `PATH`.
+You can verify the installation by running the following command in your terminal (Windows, Linux, or macOS):
+
+
 ## Example Python Code
 
 ```python
