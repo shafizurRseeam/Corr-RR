@@ -1,20 +1,23 @@
-[![arXiv](https://img.shields.io/badge/arXiv-2505.15483-<COLOR>.svg)](https://arxiv.org/abs/2505.15483)
+[![arXiv](https://img.shields.io/badge/arXiv-2505.15483-<COLOR>.svg)](https://arxiv.org/abs/2507.17516)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This repository contains the official implementation and reproducibility package for the paper:
 
 “Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy” (PETS'26)
 
- 
 
 **📘Contributions:** 
 
 * This paper proposes a two-phase LDP Framework, Correlated Randomized Response (Corr-RR), for Multi-attribute Correlated Data.
-* Corr-RR leverages inter-intributes correlations to derive correlation-aware parameter $p_y$ privately in Phase~I, which guides Phase~II perturbatio, and overall improves the frequency estiamtion. 
+* Corr-RR leverages inter-intributes correlations to derive correlation-aware parameter $p_y$ privately in Phase I, which guides Phase II perturbation, and overall improves the frequency estiamtion.
+* Results indicate that with higher correlation and higher number attributes, Corr-RR performs significantly better than baselines.  
+
+
+![img.png](Figures/fig_1.png)
 
 ---
-
-📁 Repository Structure: The main folders and files are as follows
+## 📁 Repository Structure 
+The main folders and files are as follows:
 
 ```
 |- experiments_notebook (All experiments in Jupyter notebooks)
@@ -29,8 +32,8 @@ This repository contains the official implementation and reproducibility package
 
 📥 Clone the Repository
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/<REPO_NAME>.git
-cd <REPO_NAME>
+git clone https://github.com/shafizurRseeam/Corr-RR.git
+cd Corr-RR
 ```
 ### ⚙️ Installation
 Tested environments: `uv` version `0.9.16` and Python version `3.12`~`3.13`.
@@ -41,9 +44,7 @@ All dependencies are listed in `pyproject.toml`.
 We recommend using `uv` to create a virtual environment and install the dependencies.
 
 
-To install `uv`, follow the instructions in the "[uv installation](https://docs.astral.sh/uv/)".
-
-Below are quick-install commands.
+To install `uv`, follow the instructions in the "[uv installation](https://docs.astral.sh/uv/)". Below are quick-install commands.
 
 
 **Windows (PowerShell)**
