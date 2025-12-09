@@ -5,7 +5,7 @@ from itertools import combinations
 
 
 # -------------------------------------------------------------
-# Detect project root (same logic you use everywhere)
+# Detect project root 
 # -------------------------------------------------------------
 if "__file__" in globals():
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -41,12 +41,10 @@ def dataset_stats(df):
     return d, domain_size, num_users, corr_range
 
 
-# -------------------------------------------------------------
-# MAIN — prints statistics for all .csv in a given folder
-# -------------------------------------------------------------
+
 if __name__ == "__main__":
 
-    # YOU ONLY NEED TO CHANGE THIS
+    
     dataset_folder = "preprocessed_data"
 
     folder_path = os.path.join(project_root, dataset_folder)

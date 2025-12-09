@@ -286,7 +286,7 @@ if __name__ == "__main__":
     domain = [0,1,2,3]
     rho = 0.1
     d = 2
-    R = 100                              # use R=50 for real experiment
+    R = 100                              # use
     seed = 42
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
     run_phase1_experiment(
