@@ -20,8 +20,8 @@ This repository contains the official implementation and reproducibility package
 The main folders and files are as follows:
 
 ```
-|- experiments_notebook (All experiments in Jupyter notebooks)
 |- Figures (Figures used in the paper)
+|- experiments_notebook (All experiments in Jupyter notebooks)
 |- preprocessed_data (Preprocessed real-world datasets (Clave, Mushroom, Adults))
 |- reproduction (Scripts to reproduce all results in the paper)
 |- utils (Utility functions for Corr-RR and baselines)
