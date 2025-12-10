@@ -86,7 +86,7 @@ You can run these scripts directly with `uv run` (no need to manually activate t
 ```
 [PROJECT_ROOT]$ uv run ./reproduction/fig_3a.py
 ```
-This will generate the figure using matplotlib or print the table in the terminal.
+* To reproduce any result, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_2.py`, `fig_3a.py`,`table_2.py`, etc.).
 Results should match those in the paper (minor randomness expected).
 
 ### ⏱️ Approximate Runtimes for Figures
