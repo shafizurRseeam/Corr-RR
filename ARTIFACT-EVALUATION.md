@@ -78,7 +78,7 @@ To install `uv`, follow the instructions in the "[uv installation](https://docs.
 **Windows (PowerShell)**
 
 ```bash
-PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 **macOS / Linux**
 ```bash
