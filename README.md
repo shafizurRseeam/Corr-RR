@@ -36,7 +36,7 @@ git clone https://github.com/shafizurRseeam/Corr-RR.git
 cd Corr-RR
 ```
 ### ⚙️ Installation
-Tested environments: `uv` version `0.9.16` and Python version `3.12`~`3.13`.
+Tested environments: `uv` version `0.9.16` and Python version `3.11`~`3.12`.
 
 **Install UV package manager.**
 This project is packaged by `uv`, a modern Python package management system similar to `miniconda` or `poetry`.
