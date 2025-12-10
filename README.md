@@ -124,8 +124,11 @@ The `experiments_notebook` folder contains self-contained Jupyter notebooks for 
   |- misc.ipynb
   |- MSE_vs_Attribute.ipynb
   |- MSE_vs_Budget.ipynb
-  |- ........
-
+  |- MSE_vs_Correlation.ipynb
+  |- Phase_Tables.ipynb
+  |- misc.ipynb
+  |- real_dataset_histogram.ipynb
+  |- real_world_experiment.ipynb
 ```
 Users can modify parameters to explore different experimental settings.
 
