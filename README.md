@@ -48,7 +48,7 @@ To install `uv`, follow the instructions in the "[uv installation](https://docs.
 **Windows (PowerShell)**
 
 ```bash
-PS> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 **macOS / Linux**
 ```bash
@@ -65,7 +65,7 @@ uv --version
 Navigate to the project root and run:
 
 ```
-[PROJECT_ROOT]$ uv sync
+uv sync
 ```
 This command creates a virtual environment in the project root and installs the dependencies listed in `pyproject.toml`.
 
@@ -82,25 +82,25 @@ The `reproduction` folder contains scripts for reproducing all figures and table
 
 ```
 
-You can run these scripts directly with `uv run` (no need to manually activate the environment) to generate Figures and Tables. Run any script using:
+You can run these scripts directly with `uv run` (no need to manually activate the environment) to generate Figures and Tables. Run any script from the project root using:
 ```
-[PROJECT_ROOT]$ uv run ./reproduction/fig_3a.py
+uv run ./reproduction/fig_3a.py
 ```
 * To reproduce any result, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_2.py`, `fig_3a.py`,`table_2.py`, etc.).
 Results should match those in the paper (minor randomness expected).
 
 ### ⏱️ Approximate Runtimes for Figures
 
-| Paper Figures                               | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+| Paper Figure (Per Subplot)                   | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
 |---------------------------------------------|----------------------------------|----------------------------|
 | **Fig. 2**                                   | ~2 sec                           | ~1 sec                    |
-| **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min                          | ~28 min                   |
-| **Fig. 5 (a,b,c), Fig. 6 (a,b,c)**           | ~80 min                          | ~30 min                   |
-| **Fig. 7 (a,b,c), Fig. 8 (a,b,c)**           | ~220 min                          | ~75 min                   |
-| **Fig. 9 (a,b,c), Fig. 10 (a,b,c)**          | ~45 min                          | ~15 min                   |
-| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min                 | (~8, ~5, ~10) min                |
-| **Fig. 12 (a,b,c)**                           | ~3 sec                           | ~1 sec                    |
-| **Fig. 13 (a,b,c), Fig. 14 (a,b,c)**         | ~80 min                          | ~30 min                   |
+| **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min each                         | ~28 min each                  |
+| **Fig. 5 (a,b,c), Fig. 6 (a,b,c)**           | ~80 min  each                        | ~30 min  each                 |
+| **Fig. 7 (a,b,c), Fig. 8 (a,b,c)**           | ~220 min each                         | ~75 min each                  |
+| **Fig. 9 (a,b,c), Fig. 10 (a,b,c)**          | ~45 min each                         | ~15 min  each                 |
+| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min each                 | (~8, ~5, ~10) min  each              |
+| **Fig. 12 (a,b,c)**                           | ~3 sec each                          | ~1 sec  each                  |
+| **Fig. 13 (a,b,c), Fig. 14 (a,b,c)**         | ~80 min  each                        | ~30 min  each                 |
 
 ### ⏱️ Approximate Runtimes for Tables
 
@@ -108,9 +108,10 @@ Results should match those in the paper (minor randomness expected).
 |------------------------|----------------------------------|----------------------------|
 | **Table 2**            | ~1 sec                           | ~2 sec                    |
 | **Table 3**            | ~1 sec                           | ~1 sec                    |
-| **Tables 4 & 7**       | ~3 min                           | ~25 sec                   |
-| **Tables 5 & 8**       | ~13 min                          | ~4 min                    |
-| **Tables 6 & 9**       | ~75 min                          | ~30 min                   |
+| **Tables 4 & 7**       | ~3 min  each                         | ~25 sec  each                 |
+| **Tables 5 & 8**       | ~13 min  each                        | ~4 min  each                  |
+| **Tables 6 & 9**       | ~75 min   each                       | ~30 min   each                |
+
 
 
 
