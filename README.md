@@ -34,7 +34,7 @@ git clone https://github.com/shafizurRseeam/Corr-RR.git
 cd Corr-RR
 ```
 ### ⚙️ Installation
-Tested environments: `uv` version `0.9.16` and Python version `3.11`~`3.12`.
+Tested environments: `uv` version `0.9.16` and Python versions `3.11`–`3.13`.
 
 **Install UV package manager.**
 This project is packaged by `uv`, a modern Python package management system similar to `miniconda` or `poetry`.
@@ -89,23 +89,29 @@ You can run these scripts directly with `uv run` (no need to manually activate t
 This will generate the figure using matplotlib or print the table in the terminal.
 Results should match those in the paper (minor randomness expected).
 
-**⏱️Approximate Runtimes (Rounded)**
+### ⏱️ Approximate Runtimes for Figures
 
+| Paper Figures                               | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+|---------------------------------------------|----------------------------------|----------------------------|
+| **Fig. 2**                                   | ~2 sec                           | ~1 sec                    |
+| **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min                          | ~28 min                   |
+| **Fig. 5 (a,b,c), Fig. 6 (a,b,c)**           | ~80 min                          | ~30 min                   |
+| **Fig. 7 (a,b,c), Fig. 8 (a,b,c)**           | —                                | ~75 min                   |
+| **Fig. 9 (a,b,c), Fig. 10 (a,b,c)**          | ~45 min                          | ~15 min                   |
+| **Fig. 11 (a,b,c)**                           | 18 / 14 / 23 min                 | —                         |
+| **Fig. 12 (a,b,c)**                           | ~3 sec                           | ~1 sec                    |
+| **Fig. 13 (a,b,c), Fig. 14 (a,b,c)**         | ~80 min                          | ~30 min                   |
 
-| Figure Group                                              | Windows (Xeon W-2145, 32 GB RAM) | macOS (M2 Pro, 16 GB RAM) |
-|-----------------------------------------------------------|-----------------------------------|----------------------------|
-| **Fig 2**                                                 | ~2 sec                               | ~1 sec                        |
-| **Fig 3 (a,b,c), Fig 4 (a,b,c)**                          | ~75 min                            | ~28 min                     |
-| **Fig 5 (a,b,c), Fig 6 (a,b,c), Fig 13 (a,b,c), Fig 14(a,b,c)**  | ~80 min                            | ~30 min                     |
-| **Fig 7 (a,b,c), Fig 8 (a,b,c)**                          | —                                 | ~75 min                     |
-| **Fig 9 (a,b,c), Fig 10 (a,b,c)**                         | ~45 min                            | ~15 min                     |
-| **Fig 11 (a,b,c)**                                        | ~18min / ~14min / ~23min                   | —                          |
-| **Fig 12 (a,b,c)**                                        | ~3 sec                               | ~1 sec                        |
-| **Table 2**                                               | ~1 sec                               | ~2 sec                        |
-| **Table 3**                                               | ~1 sec                               | ~1 sec                        |
-| **Tables 4 & 7**                                          | ~3 min                             | ~25 sec                       |
-| **Tables 5 & 8**                                          | ~13 min                            | ~4 min                      |
-| **Tables 6 & 9**                                          | ~75 min                             | ~30 min                     |
+### ⏱️ Approximate Runtimes for Tables
+
+| Table Numbers          | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+|------------------------|----------------------------------|----------------------------|
+| **Table 2**            | ~1 sec                           | ~2 sec                    |
+| **Table 3**            | ~1 sec                           | ~1 sec                    |
+| **Tables 4 & 7**       | ~3 min                           | ~25 sec                   |
+| **Tables 5 & 8**       | ~13 min                          | ~4 min                    |
+| **Tables 6 & 9**       | ~75 min                          | ~30 min                   |
+
 
 
 ### Option 2 — Jupyter Notebooks
