@@ -5,12 +5,11 @@ This repository contains the official implementation and reproducibility package
 “Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy” (PETS'26)
 
 
-**📘Contributions:** 
+**📘 Contributions:**
 
-* This paper proposes a two-phase LDP Framework, Correlated Randomized Response (Corr-RR), for Multi-attribute Correlated Data.
-* Corr-RR leverages inter-intributes correlations to derive correlation-aware parameter $p_y$ privately in Phase I, which guides Phase II perturbation, and overall improves the frequency estiamtion.
-* Results indicate that with higher correlation and higher number attributes, Corr-RR performs significantly better than baselines.  
-
+* This paper proposes a two-phase LDP framework, Correlated Randomized Response (Corr-RR), for multi-attribute correlated data.
+* Corr-RR leverages inter-attribute correlations to derive a correlation-aware parameter $p_y$ privately in Phase I, which guides Phase II perturbation and improves frequency estimation.
+* Results indicate that with higher correlation and a larger number of attributes, Corr-RR performs significantly better than baselines.
 
 ![img.png](Figures/fig_1.png)
 
