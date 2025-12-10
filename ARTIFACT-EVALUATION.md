@@ -156,7 +156,7 @@ You can run these scripts directly with `uv run` (no need to manually activate t
 * To reproduce any result, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_2.py`, `fig_3a.py`,`table_2.py`, etc.).
 Results should match those in the paper (minor randomness expected).
 
-#### Experiment 1: Impact of Privacy Budget
+#### Experiment 1: Impact of Privacy Budget (Figure 3–4, Page 9).
 
 To reproduce the first result, run 
 
@@ -165,40 +165,40 @@ To reproduce the first result, run
 ```
 * To reproduce the other subplots, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_3a.py`,`fig_3b.py`, `fig_3c.py`,`fig_4a.py`,`fig_4b.py`,`fig_4c.py`).
 
-#### Experiment 2: Impact of Number of Attributes.
+#### Experiment 2: Impact of Number of Attributes (Figure 5-6, Page 9-10, and Figure 13-14, Page 17).
 
 ```
-[PROJECT_ROOT]$ uv run ./reproduction/fig_5_a.py
+[PROJECT_ROOT]$ uv run ./reproduction/fig_5a.py
 ```
 * To reproduce the other subplots for, simply replace `fig_5a.py` with the desired script from the `reproduction` folder (e.g., `fig_5a.py`,`fig_5b.py`, `fig_5c.py`,`fig_6a.py`,`fig_6b.py`,`fig_6c.py`, `fig_13a.py`,`fig_13b.py`, `fig_13c.py`,`fig_14a.py`,`fig_14b.py`,`fig_14c.py`).
 
 
-#### Experiment 3: Impact of Correlations.
+#### Experiment 3: Impact of Correlations (Figure 7-8, Pages 10).
 
 ```
 [PROJECT_ROOT]$ uv run ./reproduction/fig_7a.py
 ```
 * To reproduce the other subplots, simply replace `fig_7a.py` with the desired script from the `reproduction` folder (e.g., `fig_7a.py`,`fig_7b.py`, `fig_7c.py`,`fig_8a.py`,`fig_8b.py`,`fig_8c.py`).
 
-#### Experiment 4: Impact of the Size of Phase I Users.
+#### Experiment 4: Impact of the Size of Phase I Users (Figure 9–10, Page 12, and Table 4-9, Page 18-19).
 
 ```
 [PROJECT_ROOT]$ uv run ./reproduction/fig_9a.py
 ```
 * To reproduce the other subplots, simply replace `fig_9a.py` with the desired script from the `reproduction` folder (e.g., `fig_9a.py`,`fig_9b.py`, `fig_9c.py`,`fig_10a.py`,`fig_10b.py`,`fig_10c.py`, `table_4.py`,`table_5.py`, `table_6.py`,`table_7.py`,`table_8.py`,`table_9.py`).
 
-#### Experiment 5: Results on Real-world Data. 
+#### Experiment 5: Results on Real-world Data (Figure 11, Page 12). 
 ```
 [PROJECT_ROOT]$ uv run ./reproduction/fig_11a.py
 ```
 * To reproduce the other subplots, simply replace `fig_11a.py` with the desired script from the `reproduction` folder (e.g., `fig_11b.py`,`fig_11c.py`,).
 
 
-#### Other Figures and Tables
+#### Other Figures and Tables (Figure 2, Figure 12, Table 2, and Table 3)
 ```
 [PROJECT_ROOT]$ uv run ./reproduction/fig_2.py
 ```
-* To reproduce the other subplots, simply replace `fig_2.py` with the desired script from the `reproduction` folder (e.g., `table_2`,`table_2`, `fig_12a.py`, `fig_12b.py`,`fig_12c.py`,).
+* To reproduce the other subplots, simply replace `fig_2.py` with the desired script from the `reproduction` folder (e.g., `table_2`,`table_3`, `fig_12a.py`, `fig_12b.py`,`fig_12c.py`,).
 
 ### Experiments -- Option 2 (Detailed)
 
