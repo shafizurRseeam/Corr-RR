@@ -1,30 +1,57 @@
 # Artifact Appendix
 
-Paper title: Optimal Piecewise-based Mechanism for Collecting Bounded Numerical Data under Local Differential Privacy
+Paper title: Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy
 
-Artifacts HotCRP Id: #4
 
 Requested Badge: Available, Functional, Reproduced
 
 ## Description
-This paper studies the optimality of piecewise-based mechanisms under the most general form. Our artifact includes the source code and datasets necessary to reproduce the experimental results presented in the paper.
+This paper studies Frequency estimation of multi-attribute corrlated data under LDP. Our artifact includes the source code and preprocessed datasets necessary to reproduce the experimental results presented in the paper.
 
-We have simplified the reproduction process — it should take less than 20 minutes if you are familiar with Python-based projects.
+We have simplified the reproduction process and have created seperated scripts for individual figures presented in the paper. Some figures could be generated within few seconds while others could take several minutes depending on the hardware. The scripts are expected to produce the same results for all the figures and tables (with minor variation due to the randomness). Detailed runtime is provided so as to give reviewers the idead of the expected time each script would take to run. 
 
 ### Security/Privacy Issues and Ethical Concerns (All badges)
-The artifact does not require any security modifications for installation or execution. Most evaluations are theoretical or comparative in nature. The dataset included is small and publicly available, with no sensitive information involved.
+The artifact does not require any security modifications for installation or execution. The dataset used is publickly avalavle, and we used a smaller subset of those datasets, with no sensitive information involved.
 
 ## Basic Requirements (Only for Functional and Reproduced badges)
 ### Hardware Requirements
-The code has been tested on both Windows desktops and laptops. Standard hardware with a typical CPU and 16GB of memory should be sufficient.
+The code has been tested on Linux/Windows desktops and macOS laptops. Standard hardware with a typical CPU and 16GB of memory should be sufficient. We used Xeon W-2145, 32GB RAM desktop and Macbook Pro (M2, 16GB RAM) for all the experiments.  
 
 ### Software Requirements
-The artifact is implemented entirely in Python. It only requires a working Python environment. Development was done using PyCharm, and the artifact has been tested on various Windows and Linux systems.
+The artifact is implemented entirely in Python. It only requires a working Python environment. Development was done using Jupyter Notebook and VS Code, and the artifact has been tested on various Windows, Linux and macOS systems.
 
 ### Estimated Time and Storage Consumption
-* **Time**: Approximately 20 minutes in total, including dependency installation. Once dependencies are installed, reproducing the results takes about 10 minutes.
+Reproducing all figures and tables in this artifact is computationally intensive due to the large number of simulations. The runtimes vary significantly depending on the machine, but users should expect:
 
-* **Storage**: The full installation (including dependencies) occupies approximately 350MB.
+* Installing dependencies with uv sync typically takes 1–2 minutes.
+* Running all figure and table scripts sequentially (across all subplots) may require several hours, depending on hardware. Each subplot runs independently, and users may selectively execute individual scripts as needed.
+
+
+
+Approximate Runtimes for Figures
+
+| Paper Figure (Per Subplot)                   | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+|---------------------------------------------|----------------------------------|----------------------------|
+| **Fig. 2**                                   | ~2 sec                           | ~1 sec                    |
+| **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min each                         | ~28 min each                  |
+| **Fig. 5 (a,b,c), Fig. 6 (a,b,c)**           | ~80 min  each                        | ~30 min  each                 |
+| **Fig. 7 (a,b,c), Fig. 8 (a,b,c)**           | ~220 min each                         | ~75 min each                  |
+| **Fig. 9 (a,b,c), Fig. 10 (a,b,c)**          | ~45 min each                         | ~15 min  each                 |
+| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min                 | (~8, ~5, ~10) min                |
+| **Fig. 12 (a,b,c)**                           | ~3 sec each                          | ~1 sec  each                  |
+| **Fig. 13 (a,b,c), Fig. 14 (a,b,c)**         | ~80 min  each                        | ~30 min  each                 |
+
+Approximate Runtimes for Tables
+
+| Table Numbers          | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+|------------------------|----------------------------------|----------------------------|
+| **Table 2**            | ~1 sec                           | ~2 sec                    |
+| **Table 3**            | ~1 sec                           | ~1 sec                    |
+| **Tables 4 & 7**       | ~3 min  each                         | ~25 sec  each                 |
+| **Tables 5 & 8**       | ~13 min  each                        | ~4 min  each                  |
+| **Tables 6 & 9**       | ~75 min   each                       | ~30 min   each                |
+
+* **Storage**: The complete environment (including dependencies and preprocessed datasets) requires approximately 350 MB.
 
 ## Environment 
 ### Accessibility (All badges)
