@@ -77,8 +77,8 @@ The `reproduction` folder contains scripts for reproducing all figures and table
 ```
 |- reproduction
   |- fig_2.py: Figure 2 (<1 Sec)
-  |- figure_3a.py: Figure 12a  (<28 minute)
-  |- table_2.py: Table 2 (Page 11~12)  (<1 sec)
+  |- fig_3a.py: Figure 3a  (<28 minute)
+  |- table_2.py: Table 2  (<1 sec)
   |- ...
 
 ```
