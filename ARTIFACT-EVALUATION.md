@@ -8,14 +8,14 @@ Requested Badge: Available, Functional, Reproduced
 ## Description
 This paper studies frequency estimation of multi-attribute correlated data under LDP. Our artifact includes the source code and preprocessed datasets necessary to reproduce the experimental results presented in the paper.
 
-We have simplified the reproduction process and have created seperate scripts for individual figures. Some figures could be generated within few seconds while others could take several minutes depending on the hardware. The scripts are expected to produce the same results for all the figures and tables (with minor variation due to the randomness). Detailed runtime is provided so as to give reviewers the idea of the expected time each script would take to run. 
+We have simplified the reproduction process and have created seperate scripts for individual figures and subfigures. Some figures could be generated within few seconds while others could take several minutes depending on the hardware. The scripts are expected to produce the same results for all the figures and tables (with minor variation due to the randomness). Detailed runtime is provided so as to give reviewers the idea of the expected time each script would take to run. 
 
 ### Security/Privacy Issues and Ethical Concerns (All badges)
 The artifact does not require any security modifications for installation or execution. The dataset used is publicly  available, and we used a smaller subset of those datasets, with no sensitive information involved.
 
 ## Basic Requirements (Only for Functional and Reproduced badges)
 ### Hardware Requirements
-The code has been tested on Linux/Windows desktops and macOS laptops. Standard hardware with a typical CPU and 16GB of memory should be sufficient. We used Xeon W-2145, 32GB RAM desktop and Macbook Pro (M2, 16GB RAM) for all the experiments.  
+The code has been tested on Linux/Windows desktops and macOS laptops. Standard hardware with a typical CPU and 16GB of memory should be sufficient. We used Windows 11 Enterprise (Xeon W-2145 , 32GB RAM) desktop and Macbook Pro (M2, 16GB RAM) for all the experiments.  
 
 ### Software Requirements
 The artifact is implemented entirely in Python. It only requires a working Python environment. Development was done using Jupyter Notebook and VS Code, and the artifact has been tested on various Windows, Linux and macOS systems.
@@ -32,7 +32,7 @@ Reproducing all figures and tables in this artifact is computationally intensive
 | **Fig. 5 (a,b,c), Fig. 6 (a,b,c)**           | ~80 min  each                        | ~30 min  each                 |
 | **Fig. 7 (a,b,c), Fig. 8 (a,b,c)**           | ~220 min each                         | ~75 min each                  |
 | **Fig. 9 (a,b,c), Fig. 10 (a,b,c)**          | ~45 min each                         | ~15 min  each                 |
-| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min                 | (~8, ~5, ~10) min                |
+| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min each                 | (~8, ~5, ~10) min  each              |
 | **Fig. 12 (a,b,c)**                           | ~3 sec each                          | ~1 sec  each                  |
 | **Fig. 13 (a,b,c), Fig. 14 (a,b,c)**         | ~80 min  each                        | ~30 min  each                 |
 
@@ -54,7 +54,7 @@ Reproducing all figures and tables in this artifact is computationally intensive
 GitHub repository: https://github.com/shafizurRseeam/Corr-RR.git
 
 
-Commits after `XXXX` (dated December X) are expected to work.
+Commits after `XXXX` (dated December 10) are expected to work.
 
 ### Set up the environment (Only for Functional and Reproduced badges)
 
@@ -118,7 +118,7 @@ This will print: all installed packages are compatible.
 
 #### Main Result 2: Impact of Number of Attributes.
 
-(Figure 5-6, Page 9-10) and (Figure 13-14, Page 17) Corr-RR demonstrates loswer rise in MSE compared to baselines (SPL, RS+FD, RS+RFD) as attributes ($d=2$ to $d=6$) size increases.
+(Figure 5-6, Page 9-10) and (Figure 13-14, Page 17) Corr-RR demonstrates lower rise in MSE compared to baselines (SPL, RS+FD, RS+RFD) as attributes ($d=2$ to $d=6$) size increases.
 
 #### Main Result 3: Impact of Correlations. 
 
@@ -164,14 +164,14 @@ To reproduce the first result, from the project root run:
 ```
 uv run ./reproduction/fig_3a.py
 ```
-* To reproduce the other subplots, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_3a.py`,`fig_3b.py`, `fig_3c.py`,`fig_4a.py`,`fig_4b.py`,`fig_4c.py`).
+* To reproduce the other subplots, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_3b.py`, `fig_3c.py`,`fig_4a.py`,`fig_4b.py`,`fig_4c.py`).
 
 #### Experiment 2: Impact of Number of Attributes (Figure 5-6, Page 9-10, and Figure 13-14, Page 17).
 
 ```
 uv run ./reproduction/fig_5a.py
 ```
-* To reproduce the other subplots for, simply replace `fig_5a.py` with the desired script from the `reproduction` folder (e.g., `fig_5a.py`,`fig_5b.py`, `fig_5c.py`,`fig_6a.py`,`fig_6b.py`,`fig_6c.py`, `fig_13a.py`,`fig_13b.py`, `fig_13c.py`,`fig_14a.py`,`fig_14b.py`,`fig_14c.py`).
+* To reproduce the other subplots for, simply replace `fig_5a.py` with the desired script from the `reproduction` folder (e.g., `fig_5b.py`, `fig_5c.py`,`fig_6a.py`,`fig_6b.py`,`fig_6c.py`, `fig_13a.py`,`fig_13b.py`, `fig_13c.py`,`fig_14a.py`,`fig_14b.py`,`fig_14c.py`).
 
 
 #### Experiment 3: Impact of Correlations (Figure 7-8, Pages 10).
@@ -179,14 +179,14 @@ uv run ./reproduction/fig_5a.py
 ```
 uv run ./reproduction/fig_7a.py
 ```
-* To reproduce the other subplots, simply replace `fig_7a.py` with the desired script from the `reproduction` folder (e.g., `fig_7a.py`,`fig_7b.py`, `fig_7c.py`,`fig_8a.py`,`fig_8b.py`,`fig_8c.py`).
+* To reproduce the other subplots, simply replace `fig_7a.py` with the desired script from the `reproduction` folder (e.g., `fig_7b.py`, `fig_7c.py`,`fig_8a.py`,`fig_8b.py`,`fig_8c.py`).
 
-#### Experiment 4: Impact of the Size of Phase I Users (Figure 9–10, Page 12, and Table 4-9, Page 18-19).
+#### Experiment 4: Impact of the Size of Phase I Users (Figure 9–10, Page 11, and Table 4-9, Page 18-19).
 
 ```
 uv run ./reproduction/fig_9a.py
 ```
-* To reproduce the other subplots, simply replace `fig_9a.py` with the desired script from the `reproduction` folder (e.g., `fig_9a.py`,`fig_9b.py`, `fig_9c.py`,`fig_10a.py`,`fig_10b.py`,`fig_10c.py`, `table_4.py`,`table_5.py`, `table_6.py`,`table_7.py`,`table_8.py`,`table_9.py`).
+* To reproduce the other subplots, simply replace `fig_9a.py` with the desired script from the `reproduction` folder (e.g., `fig_9b.py`, `fig_9c.py`,`fig_10a.py`,`fig_10b.py`,`fig_10c.py`, `table_4.py`,`table_5.py`, `table_6.py`,`table_7.py`,`table_8.py`,`table_9.py`).
 
 #### Experiment 5: Results on Real-world Data (Figure 11, Page 12). 
 ```
@@ -199,7 +199,7 @@ uv run ./reproduction/fig_11a.py
 ```
 uv run ./reproduction/fig_2.py
 ```
-* To reproduce the other subplots, simply replace `fig_2.py` with the desired script from the `reproduction` folder (e.g., `table_2`,`table_3`, `fig_12a.py`, `fig_12b.py`,`fig_12c.py`,).
+* To reproduce the other subplots, simply replace `fig_2.py` with the desired script from the `reproduction` folder (e.g., `table_2`,`table_3`, `fig_12a.py`, `fig_12b.py`,`fig_12c.py`).
 
 ### Experiments -- Option 2 (Detailed)
 
@@ -211,10 +211,13 @@ The `experiments_notebook` folder contains self-contained Jupyter notebooks for 
   |- misc.ipynb
   |- MSE_vs_Attribute.ipynb
   |- MSE_vs_Budget.ipynb
-  |- ........
-
+  |- MSE_vs_Correlation.ipynb
+  |- Phase_Tables.ipynb
+  |- misc.ipynb
+  |- real_dataset_histogram.ipynb
+  |- real_world_experiment.ipynb
 ```
 Users can modify parameters to explore different experimental settings.
 
 ## Limitations (Only for Functional and Reproduced badges)
-All the figures should be produced exactly as it is and any changes, due to the randomness of the experiments, will not be noticed. We did not ommit any figures and tables used in the experiments and provided scripts to generate every table and figures used. 
+All the figures should be produced exactly as it is with only minor differences due to the randomness that is not noticeable. We did not ommit any figures and tables used in the experiments and provided scripts to generate every table and figures used. 
