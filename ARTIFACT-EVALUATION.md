@@ -2,7 +2,7 @@
 
 Paper title: Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy
 
-
+Artifacts HotCRP Id: #20
 Requested Badge: Available, Functional, Reproduced
 
 ## Description
