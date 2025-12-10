@@ -98,7 +98,7 @@ Results should match those in the paper (minor randomness expected).
 | **Fig. 5 (a,b,c), Fig. 6 (a,b,c)**           | ~80 min                          | ~30 min                   |
 | **Fig. 7 (a,b,c), Fig. 8 (a,b,c)**           | ~220 min                          | ~75 min                   |
 | **Fig. 9 (a,b,c), Fig. 10 (a,b,c)**          | ~45 min                          | ~15 min                   |
-| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min                 | 8/5/10 min                |
+| **Fig. 11 (a,b,c)**                           | (~18, ~14, ~23) min                 | (~8, ~5, ~10) min                |
 | **Fig. 12 (a,b,c)**                           | ~3 sec                           | ~1 sec                    |
 | **Fig. 13 (a,b,c), Fig. 14 (a,b,c)**         | ~80 min                          | ~30 min                   |
 
