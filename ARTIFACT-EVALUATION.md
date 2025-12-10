@@ -59,6 +59,14 @@ Commits after `XXXX` (dated December X) are expected to work.
 
 ### Set up the environment (Only for Functional and Reproduced badges)
 
+
+**Cloning the repository.** Download the artifact from the GitHub repository and navigate to the project root directory:
+
+```bash
+git clone https://github.com/shafizurRseeam/Corr-RR.git
+cd Corr-RR
+```
+
 **Install UV package manager.**
 This project is packaged by `uv`, a modern Python package management system similar to `miniconda` or `poetry`.
 All dependencies are listed in `pyproject.toml`.
@@ -84,12 +92,6 @@ After installation, ensure that `uv` is added to your system PATH. Verify instal
 uv --version
 ```
 
-**Install dependencies.** Download the artifact from the GitHub repository and navigate to the project root directory:
-
-```bash
-git clone https://github.com/shafizurRseeam/Corr-RR.git
-cd Corr-RR
-```
 
 You should be in the project root directory, which contains the `pyproject.toml` file. 
 Then, run the following `uv` command:
