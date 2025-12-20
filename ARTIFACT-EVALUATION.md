@@ -1,6 +1,17 @@
 # Artifact Appendix
 
-Paper title: Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy
+Paper title: Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy (PETS'26)
+
+Authors : Shafizur Rahman Seeam, Ye Zheng, and Yidan Hu. 
+
+To cite the paper, please use the following BibTeX:
+
+@article{seeam2025frequency,
+  title={Frequency Estimation of Correlated Multi-attribute Data under Local Differential Privacy},
+  author={Seeam, Shafizur Rahman and Zheng, Ye and Hu, Yidan},
+  journal={arXiv preprint arXiv:2507.17516},
+  year={2025}
+}
 
 Artifacts HotCRP Id: #20
 
@@ -9,24 +20,36 @@ Requested Badge: Available, Functional, Reproduced
 ## Description
 This paper studies frequency estimation of multi-attribute correlated data under LDP. Our artifact includes the source code and preprocessed datasets necessary to reproduce the experimental results presented in the paper.
 
-We have simplified the reproduction process and have created seperate scripts for individual figures and subfigures. Some figures could be generated within few seconds while others could take several minutes depending on the hardware. The scripts are expected to produce the same results for all the figures and tables (with minor variation due to the randomness). Detailed runtime is provided so as to give reviewers the idea of the expected time each script would take to run. 
+We have simplified the reproduction process and have created separate scripts for individual figures and subfigures. Some figures could be generated within a few seconds while others could take several minutes depending on the hardware. The scripts are expected to produce the same results for all the figures and tables (with minor variation due to the randomness). Detailed runtime is provided so as to give reviewers the idea of the expected time each script would take to run. 
 
 ### Security/Privacy Issues and Ethical Concerns (All badges)
 The artifact does not require any security modifications for installation or execution. The dataset used is publicly  available, and we used a smaller subset of those datasets, with no sensitive information involved.
-
+ 
 ## Basic Requirements (Only for Functional and Reproduced badges)
 ### Hardware Requirements
-The code has been tested on Linux/Windows desktops and macOS laptops. Standard hardware with a typical CPU and 16GB of memory should be sufficient. We used Windows 11 Enterprise (Xeon W-2145 , 32GB RAM) desktop and Macbook Pro (M2, 16GB RAM) for all the experiments.  
+Standard hardware with a typical CPU and 16GB of memory should be sufficient. We tested the artifact on:
+* Intel® Xeon® W-2145 CPU (8 cores / 16 threads, 3.70 GHz) and 32 GB RAM
+* 14-inch MacBook Pro with an Apple M2 processor 10 cores and 16 GB RAM.
+
 
 ### Software Requirements
-The artifact is implemented entirely in Python. It only requires a working Python environment. Development was done using Jupyter Notebook and VS Code, and the artifact has been tested on various Windows, Linux and macOS systems.
+The artifact is expected to run on newer versions of Windows, Ubuntu, and macOS, but only the versions listed below were explicitly tested. Development was carried out using:
+* Python (Version 3.13.7)
+* VS Code (Version 1.107.1) 
+* Jupyter Notebook (Version 7.3.2)
+The artifact was tested on the following operating systems:
+* Microsoft Windows 11 Enterprise (OS Version 10.0.26100, Build 26100) 
+* Ubuntu (Version 24.04.3 LTS)
+* macOS Ventura (version 13.4.1).
+
+All Python dependencies are fully specified in `pyproject.toml` and are installed automatically using the `uv` package manager. No additional system-level packages are required.
 
 ### Estimated Time and Storage Consumption
-Reproducing all figures and tables in this artifact is computationally intensive due to the large number of simulations. The runtimes vary significantly depending on the machine, but users should expect:
+Reproducing all figures and tables is computationally intensive due to extensive simulations. Expected runtimes vary by hardware:
 * Installing dependencies with uv sync typically takes 3–5 minutes.
 * Approximate Runtimes for Figures
 
-| Paper Figure (Per Subplot)                   | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+| Paper Figure (Per Subplot)                   | Desktop (Xeon W-2145, 32GB RAM) | Laptop (M2 Pro, 16GB RAM) |
 |---------------------------------------------|----------------------------------|----------------------------|
 | **Fig. 2**                                   | ~2 sec                           | ~1 sec                    |
 | **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min each                         | ~28 min each                  |
@@ -54,8 +77,6 @@ Reproducing all figures and tables in this artifact is computationally intensive
 
 GitHub repository: https://github.com/shafizurRseeam/Corr-RR.git
 
-
-Commits after `c3d9f94` (dated December 10) are expected to work.
 
 ### Set up the environment (Only for Functional and Reproduced badges)
 
@@ -86,7 +107,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-After installation, ensure that `uv` is added to your system PATH. Verify installation:
+After installation, you may need to restart the terminal for `uv` to be available in PATH. Then verify installation with:
 
 ```
 uv --version
@@ -100,16 +121,24 @@ Then, run the following `uv` command:
 uv sync
 ```
 
-This command creates a virtual environment in the project root and installs the dependencies listed in `pyproject.toml`. 
+This command creates a virtual environment in `.venv` in the project root and installs the dependencies listed in `pyproject.toml`.
 
 ### Testing the Environment (Only for Functional and Reproduced badges)
-Tested environments: `uv` version `0.9.16` and Python versions `3.11`–`3.13`.
+Tested with: 
+* `uv` version `0.9.16` 
+* Python versions `3.11`–`3.13`
+
 To verify that the dependencies have been installed correctly, run the following command from the project root:
 ```
 uv pip check
 ```
 
-This will print: all installed packages are compatible.
+This checks dependency compatibility and reports any conflicts. Expected output: 
+
+```
+Checked 108 packages in 453ms
+All installed packages are compatible
+```
 
 ## Artifact Evaluation (Only for Functional and Reproduced badges)
 
@@ -126,12 +155,23 @@ This will print: all installed packages are compatible.
 (Figure 7-8, Pages 10) In Corr-RR, MSE decreases as correlation becomes stronger ($\rho=0.1$ to $\rho=0.9$), while the baselines (SPL, RS+FD, RS+RFD) show a relatively flat line, indicating that correlation has little to no effect on the baselines.  
 
 #### Main Result 4: Impact of the Size of Phase I Users.
-(Figure 9–10, Page 12) Baselines SPL and RS+FD are single phase only thus shows no change. Baseline RS+RFD and our proposed solution Corr-RR are two-phase and shows significant change. The overall MSE increase if Phase I size is higher. Typically 10-20% users in Phase I provides an overall good split. We provide more fine-grained results in from Table 4-9 in Page 18-19
+(Figure 9–10, Page 12) Baselines SPL and RS+FD are single phase only thus show no change. Baseline RS+RFD and our proposed solution Corr-RR are two-phase and shows significant change. The overall MSE increase if Phase I size is higher. Typically 10-20% users in Phase I provides a good overall split. We provide more fine-grained results in Table 4-9 in Page 18-19
 
 #### Main Result 5: Results on Real-world Data. 
 
-(Figure 11, Page 12) Corr-RR demostrates lower MSE than baselines (SPL, RS+FD, RS+RFD). However, we see for the Mushroom dataset, Corr-RR is not the best due the the nature of the dataset (highly skewed), as explained in the paper and this is supprted by Figure 12 (Page 17).
+(Figure 11, Page 12) Corr-RR demonstrates lower MSE than baselines (SPL, RS+FD, RS+RFD). However, we see for the Mushroom dataset, Corr-RR is not the best due the nature of the dataset (highly skewed), as explained in the paper and this is supported by Figure 12 (Page 17).
 
+#### Other Results:
+(Figure 2, Page 6) shows the results for correlation-aware probability `p_y` as we change the marginals, (Table 2, Page 8) shows the correlation of synthetic datasets as we change the correlation, and (Table 3, Page 8) shows the characteristics of real-world datasets. 
+
+| Claim | Figures / Tables | Script(s) |
+|------|------------------|-----------|
+| Impact of Privacy Budget | Fig. 3–4 | fig_3*.py, fig_4*.py |
+| Impact of Attributes | Fig. 5–6, 13–14 | fig_5*.py, fig_6*.py, fig_13*.py, fig_14*.py |
+| Impact of Correlation | Fig. 7–8 | fig_7*.py, fig_8*.py |
+| Phase I Size | Fig. 9–10, Tbl. 4–9 | fig_9*.py, fig_10*.py, table_4.py, table_5.py, table_6.py, table_7.py, table_8.py, table_9.py |
+| Real-world Data | Fig. 11–12 | fig_11*.py, fig_12*.py |
+| Others | Fig. 2, Tbl. 2–3 | fig_2.py, table_2.py, table_3.py |
 
 You can reproduce these results using the provided scripts. Two options are available:
 
@@ -140,10 +180,11 @@ You can reproduce these results using the provided scripts. Two options are avai
 
 ### Experiments -- Option 1 (Quick) -- Recommended
 
-The `reproduction` folder contains scripts for reproducing all figures and tables.
+Expected runtimes and storage requirements for each figure and table are summarized in the "Estimated Time and Storage Consumption" section above. The `reproduction` folder contains scripts for reproducing all figures and tables.
 
 ```
 |- reproduction
+  |- all_experiments.py
   |- fig_2.py: Figure 2 (<1 Sec)
   |- fig_3a.py: Figure 3a  (<28 minute)
   |- table_2.py: Table 2  (<1 sec)
@@ -151,12 +192,22 @@ The `reproduction` folder contains scripts for reproducing all figures and table
 
 ```
 
-You can run these scripts directly with `uv run` (no need to manually activate the environment) to generate Figures and Tables. Run any script from the project root using:
+You can run these scripts directly with `uv run` (no need to manually activate the environment) to generate Figures and Tables. Run any script from the project root. To reproduce all the results at once, simply use
+
+```
+uv run ./reproduction/all_experiments.py
+```
+* This command creates a folder named `genergenerated_results` in the project root and saves all generated figures in PDF format and tables in TXT and CSV formats. Each script produces an output file with a matching name (e.g., `fig_3a.py` generates `fig_3a.pdf`, `table_2.py` generates `table_2.txt`, and `table_3.py` generates `table_3.csv`). Since this script runs all experiments sequentially, it may take a substantial amount of time. For faster validation, we recommend running individual scripts corresponding to specific figures or tables.
+
+
+To generate individual experiments, simply run the following from root. (Recommended)
+
 ```
 uv run ./reproduction/fig_3a.py
 ```
 * To reproduce any result, simply replace `fig_3a.py` with the desired script from the `reproduction` folder (e.g., `fig_2.py`, `fig_3a.py`,`table_2.py`, etc.).
 Results should match those in the paper (minor randomness expected).
+
 
 #### Experiment 1: Impact of Privacy Budget (Figure 3–4, Page 9).
 
@@ -214,11 +265,10 @@ The `experiments_notebook` folder contains self-contained Jupyter notebooks for 
   |- MSE_vs_Budget.ipynb
   |- MSE_vs_Correlation.ipynb
   |- Phase_Tables.ipynb
-  |- misc.ipynb
   |- real_dataset_histogram.ipynb
   |- real_world_experiment.ipynb
 ```
 Users can modify parameters to explore different experimental settings.
 
 ## Limitations (Only for Functional and Reproduced badges)
-All the figures should be produced exactly as it is with only minor differences due to the randomness that is not noticeable. We did not ommit any figures and tables used in the experiments and provided scripts to generate every table and figures used. 
+All the figures should be produced exactly as it is with only minor differences due to the randomness that is not noticeable. We did not omit any figures and tables used in the experiments and provided scripts to generate every table and figures used. 

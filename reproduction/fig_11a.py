@@ -175,7 +175,7 @@ def sweep_realworld(
     plt.xlabel(r"$\epsilon$", fontsize=50)
     plt.ylabel("MSE", fontsize=40)
 
-    # ✨ Force scientific notation on the x-axis
+    # 
     plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
 
     plt.xticks(epsilons, fontsize=30)
@@ -216,8 +216,7 @@ if __name__ == "__main__":
     sweep_realworld(
         df=df,
         epsilons=eps_list,
-        #R=50,
-        R=1,
+        R=50,
         frac_corr=0.1,
         frac_rsrfd=0.1,
         # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",

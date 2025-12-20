@@ -6,7 +6,7 @@ from pathlib import Path
 # Paths
 ROOT_DIR = Path(__file__).resolve().parent.parent
 REPRO_DIR = ROOT_DIR / "reproduction"
-OUT_DIR = ROOT_DIR / "all_experiment_results"
+OUT_DIR = ROOT_DIR / "generated_results"
 
 OUT_DIR.mkdir(exist_ok=True)
 
