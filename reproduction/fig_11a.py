@@ -1,5 +1,6 @@
 import sys, os
-
+import os
+from pathlib import Path
 
 
 
@@ -147,7 +148,7 @@ def sweep_realworld(
     frac_rsrfd=0.1,
     plot_dir=None,
     csv_dir=None,
-    file="realworld_plot"
+    file="fig_11a"
 ):
     keys = ["SPL", "RS+FD", "RS+RFD", "Corr-RR"]
     means = {k: np.zeros(len(epsilons)) for k in keys}
@@ -182,12 +183,14 @@ def sweep_realworld(
     plt.legend(fontsize=35)
     plt.tight_layout()
 
-    if plot_dir:
-        os.makedirs(plot_dir, exist_ok=True)
-        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf")
+    out_dir = plot_dir or os.environ.get("FIG_OUT_DIR")
+    if out_dir:
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+
+        fname = file if file else Path(__file__).stem
+        plt.savefig(Path(out_dir) / f"{fname}.pdf", bbox_inches="tight")
 
     plt.show()
-
     if csv_dir:
         os.makedirs(csv_dir, exist_ok=True)
         dfout = pd.DataFrame({"epsilon": epsilons})
@@ -213,7 +216,8 @@ if __name__ == "__main__":
     sweep_realworld(
         df=df,
         epsilons=eps_list,
-        R=50,
+        #R=50,
+        R=1,
         frac_corr=0.1,
         frac_rsrfd=0.1,
         # plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",

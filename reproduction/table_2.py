@@ -186,6 +186,40 @@ def correlation_table_syna_synb(
         print(cell.ljust(col_widths[i]), end="")
 
     print("\n")
+
+
+    out_dir = os.environ.get("FIG_OUT_DIR")
+    if out_dir:
+        from pathlib import Path
+
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+
+        # Build DataFrame
+        rows = []
+        for pair, vals in results.items():
+            row = {"Pair": f"({pair[0]}, {pair[1]})"}
+            idx = 0
+            for rho in rhos:
+                row[f"SynA_rho_{rho}"] = vals[idx]
+                row[f"SynB_rho_{rho}"] = vals[idx + 1]
+                idx += 2
+            rows.append(row)
+
+        df_out = pd.DataFrame(rows)
+
+        # Add average row
+        avg_row = {"Pair": "Average"}
+        idx = 0
+        for rho in rhos:
+            avg_row[f"SynA_rho_{rho}"] = avg_vals[idx]
+            avg_row[f"SynB_rho_{rho}"] = avg_vals[idx + 1]
+            idx += 2
+        df_out = pd.concat([df_out, pd.DataFrame([avg_row])], ignore_index=True)
+
+        # Save
+        out_path = Path(out_dir) / "table_2.csv"
+        df_out.to_csv(out_path, index=False)
+
 if __name__ == "__main__":
     correlation_table_syna_synb(
         rhos=[0.1, 0.5, 0.9],

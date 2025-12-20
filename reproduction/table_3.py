@@ -49,35 +49,50 @@ if __name__ == "__main__":
 
     folder_path = os.path.join(project_root, dataset_folder)
 
-    print("\n=== REAL-WORLD DATASET STATISTICS ===\n")
-    #print("Project root:", project_root)
-    #print("Dataset folder:", folder_path)
-    print()
+out_lines = []
 
-    # Load all CSV files in folder
-    for filename in os.listdir(folder_path):
+header = "\n=== REAL-WORLD DATASET STATISTICS ===\n\n"
+print(header, end="")
+out_lines.append(header)
 
-        if not filename.endswith(".csv"):
-            continue
+# Load all CSV files in folder
+for filename in os.listdir(folder_path):
 
-        dataset_name = filename.replace(".csv", "")
-        full_path = os.path.join(folder_path, filename)
+    if not filename.endswith(".csv"):
+        continue
 
-        print(f"Dataset: {dataset_name}")
-        #print(f"  Path: {full_path}")
+    dataset_name = filename.replace(".csv", "")
+    full_path = os.path.join(folder_path, filename)
 
-        df = pd.read_csv(full_path)
+    block = []
+    block.append(f"Dataset: {dataset_name}")
 
-        # Encode categorical columns
-        df_enc = df.copy()
-        for col in df_enc.columns:
-            df_enc[col] = df_enc[col].astype("category").cat.codes
+    df = pd.read_csv(full_path)
 
-        d, dom, users, corr = dataset_stats(df_enc)
+    # Encode categorical columns
+    df_enc = df.copy()
+    for col in df_enc.columns:
+        df_enc[col] = df_enc[col].astype("category").cat.codes
 
-        print(f"  d (num attributes):      {d}")
-        print(f"  |D| (max domain size):   {dom}")
-        print(f"  # Users:                 {users}")
-        print(f"  Correlation range:       {corr[0]} to {corr[1]}")
-        print("----------------------------------------")
+    d, dom, users, corr = dataset_stats(df_enc)
+
+    block.append(f"  d (num attributes):      {d}")
+    block.append(f"  |D| (max domain size):   {dom}")
+    block.append(f"  # Users:                 {users}")
+    block.append(f"  Correlation range:       {corr[0]} to {corr[1]}")
+    block.append("----------------------------------------")
+
+    text = "\n".join(block) + "\n"
+    print(text, end="")
+    out_lines.append(text)
+
+
+out_dir = os.environ.get("FIG_OUT_DIR")
+if out_dir:
+    from pathlib import Path
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+
+    out_path = Path(out_dir) / "table_3.txt"
+    with open(out_path, "w") as f:
+        f.writelines(out_lines)
 
