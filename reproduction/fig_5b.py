@@ -239,7 +239,7 @@ if __name__ == "__main__":
         ds=ds,
         epsilon=fixed_eps,
         n=20000,
-        R=5,
+        R=50,
         corr=rho,
         domain=domain,
         x1_marginal=x1_marginal,

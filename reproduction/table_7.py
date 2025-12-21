@@ -236,7 +236,7 @@ if __name__ == "__main__":
     #     x1_marginal={0:0.4,1:0.3,2:0.2,3:0.1},
     # )
 
-    # Uncomment for progressive model
+    
     run_phase1_experiment(
         model="PROGRESSIVE",
         epsilons=[0.1, 0.3, 0.5],

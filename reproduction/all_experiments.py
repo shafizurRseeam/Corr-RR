@@ -10,6 +10,7 @@ OUT_DIR = ROOT_DIR / "generated_results"
 
 OUT_DIR.mkdir(exist_ok=True)
 
+
 scripts = [
     "fig_2.py",
     "fig_3a.py",
@@ -56,7 +57,7 @@ scripts = [
     "table_7.py",
     "table_8.py",
     "table_9.py",
-]
+    ]
 
 
 for script in scripts:

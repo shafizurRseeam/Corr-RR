@@ -352,7 +352,7 @@ if __name__ == "__main__":
     means = sweep_all_progressive(
         n=20000,
         epsilons=eps,
-        R=5,
+        R=50,
         rho=0.5,                 # global copy probability
         d=4,                     # total attributes
         domain=domain,

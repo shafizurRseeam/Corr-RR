@@ -23,7 +23,7 @@ This paper studies frequency estimation of multi-attribute correlated data under
 We have simplified the reproduction process and have created separate scripts for individual figures and subfigures. Some figures could be generated within a few seconds while others could take several minutes depending on the hardware. The scripts are expected to produce the same results for all the figures and tables (with minor variation due to the randomness). Detailed runtime is provided so as to give reviewers the idea of the expected time each script would take to run. 
 
 ### Security/Privacy Issues and Ethical Concerns (All badges)
-The artifact does not require any security modifications for installation or execution. The dataset used is publicly  available, and we used a smaller subset of those datasets, with no sensitive information involved.
+The artifact does not require any security modifications for installation or execution. The dataset used (Clave, Mushroom, Adult) is publicly  available, and we used a smaller subset of those datasets. We included these subset datasets in the `preprocessed_data`,  with no sensitive information involved.  
  
 ## Basic Requirements (Only for Functional and Reproduced badges)
 ### Hardware Requirements
@@ -33,16 +33,18 @@ Standard hardware with a typical CPU and 16GB of memory should be sufficient. We
 
 
 ### Software Requirements
-The artifact is expected to run on newer versions of Windows, Ubuntu, and macOS, but only the versions listed below were explicitly tested. Development was carried out using:
-* Python (Version 3.13.7)
-* VS Code (Version 1.107.1) 
-* Jupyter Notebook (Version 7.3.2)
 
-The artifact was tested on the following operating systems:
+Any latest stable operating system of Windows, Ubuntu, and macOS is sufficient to run the experiments. We developed and evaluated the artifact on the following operating systems:
 
 * Microsoft Windows 11 Enterprise (OS Version 10.0.26100, Build 26100) 
 * Ubuntu (Version 24.04.3 LTS)
-* macOS Ventura (version 13.4.1).
+* macOS Ventura (version 13.4.1)
+
+Development was carried out using:
+
+* Python (Version 3.13.7)
+* VS Code (Version 1.107.1) 
+* Jupyter Notebook (Version 7.3.2)
 
 All Python dependencies are fully specified in `pyproject.toml` and are installed automatically using the `uv` package manager. No additional system-level packages are required.
 
@@ -51,7 +53,7 @@ Reproducing all figures and tables is computationally intensive due to extensive
 * Installing dependencies with uv sync typically takes 3–5 minutes.
 * Approximate Runtimes for Figures
 
-| Paper Figure (Per Subplot)                   | Windows (Xeon W-2145, 32GB RAM) | Apple M2 (10-core CPU, 16 GB RAM) |
+| Paper Figure (Per Subplot)                   | Desktop (Xeon W-2145, 32GB RAM) | Apple M2 (10-core CPU, 16 GB RAM) |
 |---------------------------------------------|----------------------------------|----------------------------|
 | **Fig. 2**                                   | ~2 sec                           | ~1 sec                    |
 | **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min each                         | ~28 min each                  |
@@ -109,7 +111,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-After installation, you may need to restart the terminal for `uv` to be available in PATH. Then verify installation with:
+After installation, you need to restart the terminal for `uv` to be available in PATH. Then verify installation with:
 
 ```
 uv --version
@@ -192,10 +194,9 @@ You can run these scripts directly with `uv run` (no need to manually activate t
 ```
 uv run ./reproduction/all_experiments.py
 ```
-* This command creates a folder named `generated_results` in the project root and saves all generated figures in PDF format and tables in TXT and CSV formats. Each script produces an output file with a matching name (e.g., `fig_3a.py` generates `fig_3a.pdf`, `table_2.py` generates `table_2.txt`, and `table_3.py` generates `table_3.csv`). Since this script runs all experiments sequentially, it may take a substantial amount of time. For faster validation, we recommend running individual scripts corresponding to specific figures or tables.
+* This command creates a folder named `generated_results` in the project root and saves all generated figures in PDF format and tables in TXT and CSV formats. Each script produces an output file with a matching name (e.g., `fig_3a.py` generates `fig_3a.pdf`, `table_2.py` generates `table_2.txt`, and `table_3.py` generates `table_3.csv`). Since this script runs all experiments sequentially, it may take a substantial amount of time. Please ignore the warnings that you may see in the terminal. 
 
-
-To generate individual experiments, simply run the following from root. (Recommended)
+(Recommended) For faster validation, we recommend running individual scripts corresponding to specific figures or tables. This will not store the results, but show you the individual figures and print the tables results in the terminal. To generate individual experiments, simply run the following from root. 
 
 ```
 uv run ./reproduction/fig_3a.py

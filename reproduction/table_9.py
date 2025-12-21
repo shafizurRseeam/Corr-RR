@@ -214,7 +214,7 @@ def run_phase1_experiment(
     if out_dir:
         Path(out_dir).mkdir(parents=True, exist_ok=True)
         pd.DataFrame(all_rows).to_csv(
-            Path(out_dir) / f"table_8.csv",
+            Path(out_dir) / f"table_9.csv",
             index=False
         )
 
