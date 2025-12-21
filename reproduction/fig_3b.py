@@ -240,7 +240,7 @@ if __name__ == "__main__":
     means = sweep_all(
         n=20000,
         epsilons=eps,
-        R=50,
+        R=5,
         corr=rho,
         d=d,
         domain=domain,

@@ -198,7 +198,7 @@ if __name__ == "__main__":
     sweep_realworld(
         df=df,
         epsilons=eps_list,
-        R=50,
+        R=5,
         frac_corr=0.1,
         frac_rsrfd=0.1,
         #plot_dir=r"C:\\Users\\ss6365\\Desktop\\Corr-RR\\fig",

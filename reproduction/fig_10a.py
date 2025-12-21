@@ -287,7 +287,7 @@ def sweep_all_progressive(
 means = sweep_all_progressive(
     n=20000,
     epsilon=0.1,            # pick the ε you want to hold fixed
-    R=50,
+    R=5,
     corr=0.9,
     d=2,
     domain=[0,1,2,3],

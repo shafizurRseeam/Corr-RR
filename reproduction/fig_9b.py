@@ -273,7 +273,7 @@ def sweep_vs_phase1(
 means = sweep_vs_phase1(
     n=20000,
     epsilon=0.3,            # pick the ε you want to hold fixed
-    R=50,
+    R=5,
     corr=0.9,
     d=2,
     domain=[0,1,2,3],

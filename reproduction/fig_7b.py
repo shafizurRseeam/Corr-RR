@@ -264,7 +264,7 @@ if __name__ == "__main__":
     domain = [0, 1, 2, 3]
     x1_marginal = {0: 0.4, 1: 0.3, 2: 0.2, 3: 0.1}
     n = 20000
-    R = 50 #change this to 200
+    R = 20 #change this to 200
     eps_fixed = 0.5
     rho_values = [0.1, 0.3, 0.5, 0.7, 0.9]
     d=3

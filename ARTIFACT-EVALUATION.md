@@ -37,7 +37,9 @@ The artifact is expected to run on newer versions of Windows, Ubuntu, and macOS,
 * Python (Version 3.13.7)
 * VS Code (Version 1.107.1) 
 * Jupyter Notebook (Version 7.3.2)
+
 The artifact was tested on the following operating systems:
+
 * Microsoft Windows 11 Enterprise (OS Version 10.0.26100, Build 26100) 
 * Ubuntu (Version 24.04.3 LTS)
 * macOS Ventura (version 13.4.1).
@@ -49,7 +51,7 @@ Reproducing all figures and tables is computationally intensive due to extensive
 * Installing dependencies with uv sync typically takes 3–5 minutes.
 * Approximate Runtimes for Figures
 
-| Paper Figure (Per Subplot)                   | Desktop (Xeon W-2145, 32GB RAM) | Laptop (M2 Pro, 16GB RAM) |
+| Paper Figure (Per Subplot)                   | Windows (Xeon W-2145, 32GB RAM) | Apple M2 (10-core CPU, 16 GB RAM) |
 |---------------------------------------------|----------------------------------|----------------------------|
 | **Fig. 2**                                   | ~2 sec                           | ~1 sec                    |
 | **Fig. 3 (a,b,c), Fig. 4 (a,b,c)**           | ~75 min each                         | ~28 min each                  |
@@ -62,7 +64,7 @@ Reproducing all figures and tables is computationally intensive due to extensive
 
 * Approximate Runtimes for Tables
 
-| Table Numbers          | Windows (Xeon W-2145, 32GB RAM) | macOS (M2 Pro, 16GB RAM) |
+| Table Numbers          | Windows (Xeon W-2145, 32GB RAM) | Apple M2 (10-core CPU, 16 GB RAM) |
 |------------------------|----------------------------------|----------------------------|
 | **Table 2**            | ~1 sec                           | ~2 sec                    |
 | **Table 3**            | ~1 sec                           | ~1 sec                    |
@@ -125,7 +127,7 @@ This command creates a virtual environment in `.venv` in the project root and in
 
 ### Testing the Environment (Only for Functional and Reproduced badges)
 Tested with: 
-* `uv` version `0.9.16` 
+* `uv` version `0.9.17` on macOS and `0.9.18` on Windows Desktop
 * Python versions `3.11`–`3.13`
 
 To verify that the dependencies have been installed correctly, run the following command from the project root:
@@ -133,10 +135,10 @@ To verify that the dependencies have been installed correctly, run the following
 uv pip check
 ```
 
-This checks dependency compatibility and reports any conflicts. Expected output: 
+This checks dependency compatibility and reports any conflicts. The exact number of packages and runtime may vary across platforms. A successful check should report that all installed packages are compatible. Expected output, where N and T would vary: 
 
 ```
-Checked 108 packages in 453ms
+Checked N packages in T ms
 All installed packages are compatible
 ```
 
@@ -162,16 +164,9 @@ All installed packages are compatible
 (Figure 11, Page 12) Corr-RR demonstrates lower MSE than baselines (SPL, RS+FD, RS+RFD). However, we see for the Mushroom dataset, Corr-RR is not the best due the nature of the dataset (highly skewed), as explained in the paper and this is supported by Figure 12 (Page 17).
 
 #### Other Results:
-(Figure 2, Page 6) shows the results for correlation-aware probability `p_y` as we change the marginals, (Table 2, Page 8) shows the correlation of synthetic datasets as we change the correlation, and (Table 3, Page 8) shows the characteristics of real-world datasets. 
+(Figure 2, Page 6) shows the results for correlation-aware probability $p_y$ as we change the marginals, (Table 2, Page 8) shows the correlation of synthetic datasets as we change the correlation, and (Table 3, Page 8) shows the characteristics of real-world datasets. 
 
-| Claim | Figures / Tables | Script(s) |
-|------|------------------|-----------|
-| Impact of Privacy Budget | Fig. 3–4 | fig_3*.py, fig_4*.py |
-| Impact of Attributes | Fig. 5–6, 13–14 | fig_5*.py, fig_6*.py, fig_13*.py, fig_14*.py |
-| Impact of Correlation | Fig. 7–8 | fig_7*.py, fig_8*.py |
-| Phase I Size | Fig. 9–10, Tbl. 4–9 | fig_9*.py, fig_10*.py, table_4.py, table_5.py, table_6.py, table_7.py, table_8.py, table_9.py |
-| Real-world Data | Fig. 11–12 | fig_11*.py, fig_12*.py |
-| Others | Fig. 2, Tbl. 2–3 | fig_2.py, table_2.py, table_3.py |
+
 
 You can reproduce these results using the provided scripts. Two options are available:
 
@@ -197,7 +192,7 @@ You can run these scripts directly with `uv run` (no need to manually activate t
 ```
 uv run ./reproduction/all_experiments.py
 ```
-* This command creates a folder named `genergenerated_results` in the project root and saves all generated figures in PDF format and tables in TXT and CSV formats. Each script produces an output file with a matching name (e.g., `fig_3a.py` generates `fig_3a.pdf`, `table_2.py` generates `table_2.txt`, and `table_3.py` generates `table_3.csv`). Since this script runs all experiments sequentially, it may take a substantial amount of time. For faster validation, we recommend running individual scripts corresponding to specific figures or tables.
+* This command creates a folder named `generated_results` in the project root and saves all generated figures in PDF format and tables in TXT and CSV formats. Each script produces an output file with a matching name (e.g., `fig_3a.py` generates `fig_3a.pdf`, `table_2.py` generates `table_2.txt`, and `table_3.py` generates `table_3.csv`). Since this script runs all experiments sequentially, it may take a substantial amount of time. For faster validation, we recommend running individual scripts corresponding to specific figures or tables.
 
 
 To generate individual experiments, simply run the following from root. (Recommended)
@@ -252,6 +247,19 @@ uv run ./reproduction/fig_11a.py
 uv run ./reproduction/fig_2.py
 ```
 * To reproduce the other subplots, simply replace `fig_2.py` with the desired script from the `reproduction` folder (e.g., `table_2`,`table_3`, `fig_12a.py`, `fig_12b.py`,`fig_12c.py`).
+
+
+
+Following is the summarized scripts mapping to individual results in the paper:
+
+| Claim | Figures / Tables | Script(s) |
+|------|------------------|-----------|
+| Impact of Privacy Budget | Figure 3–4 | fig_3a.py, fig_3b.py, fig_3c.py, fig_4a.py, fig_4b.py, fig_4c.py |
+| Impact of Attributes | Figure 5–6, 13–14 | fig_5a.py, fig_5b.py, fig_5c.py, fig_6a.py, fig_6b.py, fig_6c.py,  fig_13a.py, fig_13b.py, fig_13c.py, fig_14a.py, fig_14b.py, fig_14c.py |
+| Impact of Correlation | Figure 7–8 | fig_7a.py, fig_7b.py, fig_7c.py, fig_8a.py, fig_8b.py, fig_8c.py |
+| Phase I Size | Figure 9–10, Table 4–9 | fig_9a.py, fig_9b.py, fig_9c.py, fig_10a.py, fig_10b.py, fig_10c.py, table_4.py, table_5.py, table_6.py, table_7.py, table_8.py, table_9.py |
+| Real-world Data | Figure 11–12 | fig_11a.py, fig_11b.py, fig_11c.py, fig_12a.py, fig_12b.py, fig_12c.py |
+| Others | Figure 2, Table 2–3 | fig_2.py, table_2.py, table_3.py |
 
 ### Experiments -- Option 2 (Detailed)
 
