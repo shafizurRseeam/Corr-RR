@@ -1,5 +1,6 @@
 import sys, os
-
+import os
+from pathlib import Path
 
 
 
@@ -136,7 +137,7 @@ def sweep_realworld(
     frac_rsrfd=0.1,
     plot_dir=None,
     csv_dir=None,
-    file="realworld_plot"
+    file="fig_11b"
 ):
     keys = ["SPL", "RS+FD", "RS+RFD", "Corr-RR"]
     means = {k: np.zeros(len(epsilons)) for k in keys}
@@ -163,10 +164,12 @@ def sweep_realworld(
     plt.yticks(fontsize=25)
     plt.legend(fontsize=30)
     plt.tight_layout()
+    out_dir = plot_dir or os.environ.get("FIG_OUT_DIR")
+    if out_dir:
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
 
-    if plot_dir:
-        os.makedirs(plot_dir, exist_ok=True)
-        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf")
+        fname = file if file else Path(__file__).stem
+        plt.savefig(Path(out_dir) / f"{fname}.pdf", bbox_inches="tight")
 
     plt.show()
 

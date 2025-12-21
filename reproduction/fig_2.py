@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import os
+from pathlib import Path
 # ==========================================================
 # Function to compute optimal p_y
 # ==========================================================
@@ -79,6 +80,15 @@ if __name__ == "__main__":
                frameon=True, edgecolor='black')
 
     plt.tight_layout()
+
+
+
+    out_dir = os.environ.get("FIG_OUT_DIR")
+    if out_dir:
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+        out_path = Path(out_dir) / f"{Path(__file__).stem}.pdf"
+        plt.savefig(out_path, bbox_inches="tight")
+
     plt.show()
 
   

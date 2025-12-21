@@ -1,5 +1,6 @@
 import sys, os
-
+import os
+from pathlib import Path
 
 
 
@@ -261,9 +262,12 @@ def sweep_all_progressive(
     def _fmt(x): return f"{x:g}"
     base = f"mseVSphase1_{attr_count}attr_{domain_size}domain_n_{n}_eps_{_fmt(epsilon)}_rho_{_fmt(corr)}"
 
-    if plot_dir:
-        os.makedirs(plot_dir, exist_ok=True)
-        plt.savefig(os.path.join(plot_dir, file + ".pdf"), format="pdf", bbox_inches="tight", pad_inches=0.2)
+    out_dir = plot_dir or os.environ.get("FIG_OUT_DIR")
+    if out_dir:
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+
+        fname = file if file else Path(__file__).stem
+        plt.savefig(Path(out_dir) / f"{fname}.pdf", bbox_inches="tight")
 
     plt.show()
 

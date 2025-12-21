@@ -1,5 +1,6 @@
 import sys, os
-
+import os
+from pathlib import Path
 
 
 
@@ -139,15 +140,21 @@ def plot_grouped_value_distribution(
     if tight_layout:
         plt.tight_layout()
 
+    out_dir = os.environ.get("FIG_OUT_DIR")
+
     if save_path is not None:
+    # Explicit save path (manual use)
         plt.savefig(save_path, dpi=dpi, bbox_inches="tight")
         print(f"Saved figure to: {save_path}")
 
+    elif out_dir is not None:
+    # Automation: save to generated_figures/
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+        fname = Path(__file__).stem + ".pdf"
+        save_path = Path(out_dir) / fname
+        plt.savefig(save_path, dpi=dpi, bbox_inches="tight")
+        print(f"Saved figure to: {save_path}")
     plt.show()
-    #plt.close(fig)
-
-
-
 
 
 
